@@ -433,7 +433,7 @@ extension CostUsageScanner {
         now: Date,
         options: Options) -> CostUsageDailyReport
     {
-        var cache = CostUsageCacheIO.load(provider: provider, cacheRoot: options.cacheRoot)
+        var cache = CostUsageCacheIO.load(provider: provider, cacheRoot: options.cacheRoot, allTime: range.isAllTime)
         let nowMs = Int64(now.timeIntervalSince1970 * 1000)
 
         let refreshMs = Int64(max(0, options.refreshMinIntervalSeconds) * 1000)
@@ -467,9 +467,12 @@ extension CostUsageScanner {
                 cache.files.removeValue(forKey: key)
             }
 
-            Self.pruneDays(cache: &cache, sinceKey: range.scanSinceKey, untilKey: range.scanUntilKey)
+            // Don't prune days for all-time cache - keep everything
+            if !range.isAllTime {
+                Self.pruneDays(cache: &cache, sinceKey: range.scanSinceKey, untilKey: range.scanUntilKey)
+            }
             cache.lastScanUnixMs = nowMs
-            CostUsageCacheIO.save(provider: provider, cache: cache, cacheRoot: options.cacheRoot)
+            CostUsageCacheIO.save(provider: provider, cache: cache, cacheRoot: options.cacheRoot, allTime: range.isAllTime)
         }
 
         return Self.buildClaudeReportFromCache(cache: cache, range: range)

@@ -6,15 +6,16 @@ enum CostUsageCacheIO {
         return root.appendingPathComponent("CodexBar", isDirectory: true)
     }
 
-    static func cacheFileURL(provider: UsageProvider, cacheRoot: URL? = nil) -> URL {
+    static func cacheFileURL(provider: UsageProvider, cacheRoot: URL? = nil, allTime: Bool = false) -> URL {
         let root = cacheRoot ?? self.defaultCacheRoot()
+        let suffix = allTime ? "-alltime" : ""
         return root
             .appendingPathComponent("cost-usage", isDirectory: true)
-            .appendingPathComponent("\(provider.rawValue)-v1.json", isDirectory: false)
+            .appendingPathComponent("\(provider.rawValue)-v1\(suffix).json", isDirectory: false)
     }
 
-    static func load(provider: UsageProvider, cacheRoot: URL? = nil) -> CostUsageCache {
-        let url = self.cacheFileURL(provider: provider, cacheRoot: cacheRoot)
+    static func load(provider: UsageProvider, cacheRoot: URL? = nil, allTime: Bool = false) -> CostUsageCache {
+        let url = self.cacheFileURL(provider: provider, cacheRoot: cacheRoot, allTime: allTime)
         if let decoded = self.loadCache(at: url) { return decoded }
         return CostUsageCache()
     }
@@ -27,8 +28,8 @@ enum CostUsageCacheIO {
         return decoded
     }
 
-    static func save(provider: UsageProvider, cache: CostUsageCache, cacheRoot: URL? = nil) {
-        let url = self.cacheFileURL(provider: provider, cacheRoot: cacheRoot)
+    static func save(provider: UsageProvider, cache: CostUsageCache, cacheRoot: URL? = nil, allTime: Bool = false) {
+        let url = self.cacheFileURL(provider: provider, cacheRoot: cacheRoot, allTime: allTime)
         let dir = url.deletingLastPathComponent()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
 

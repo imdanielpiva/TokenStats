@@ -40,6 +40,7 @@ struct MenuDescriptor {
         case switchAccount(UsageProvider)
         case openTerminal(command: String)
         case loginToProvider(url: String)
+        case usageHistory
         case settings
         case about
         case quit
@@ -307,6 +308,7 @@ struct MenuDescriptor {
             entries.append(.action("Update ready, restart now?", .installUpdate))
         }
         entries.append(contentsOf: [
+            .action("Usage History...", .usageHistory),
             .action("Settings...", .settings),
             .action("About CodexBar", .about),
             .action("Quit", .quit),
@@ -405,7 +407,7 @@ private enum AccountFormatter {
 extension MenuDescriptor.MenuAction {
     var systemImageName: String? {
         switch self {
-        case .installUpdate, .settings, .about, .quit:
+        case .installUpdate, .settings, .about, .quit, .usageHistory:
             nil
         case .refresh: MenuDescriptor.MenuActionSystemImage.refresh.rawValue
         case .dashboard: MenuDescriptor.MenuActionSystemImage.dashboard.rawValue

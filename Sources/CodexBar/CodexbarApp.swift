@@ -63,6 +63,13 @@ struct CodexBarApp: App {
         }
         .defaultSize(width: PreferencesTab.windowWidth, height: PreferencesTab.general.preferredHeight)
         .windowResizability(.contentSize)
+
+        Window("Usage History", id: "usage-history") {
+            UsageHistoryWindow()
+        }
+        .defaultSize(width: 900, height: 650)
+        .windowResizability(.contentMinSize)
+        .keyboardShortcut("u", modifiers: [.command])
     }
 
     private func openSettings(tab: PreferencesTab) {

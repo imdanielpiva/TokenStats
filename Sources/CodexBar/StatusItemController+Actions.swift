@@ -115,6 +115,13 @@ extension StatusItemController {
 
     @objc func showSettingsAbout() { self.openSettings(tab: .about) }
 
+    @objc func openUsageHistory() {
+        DispatchQueue.main.async {
+            NSApp.activate(ignoringOtherApps: true)
+            NotificationCenter.default.post(name: .codexbarOpenUsageHistory, object: nil)
+        }
+    }
+
     func openMenuFromShortcut() {
         if self.shouldMergeIcons {
             self.statusItem.button?.performClick(nil)

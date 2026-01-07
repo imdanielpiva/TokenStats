@@ -98,6 +98,8 @@ struct MenuContent: View {
             self.actions.quit()
         case let .copyError(message):
             self.actions.copyError(message)
+        case .usageHistory:
+            self.actions.openUsageHistory()
         }
     }
 }
@@ -113,6 +115,7 @@ struct MenuActions {
     let openAbout: () -> Void
     let quit: () -> Void
     let copyError: (String) -> Void
+    let openUsageHistory: () -> Void
 }
 
 @MainActor

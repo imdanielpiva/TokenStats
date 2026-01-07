@@ -1,33 +1,37 @@
 import Foundation
 
-enum CostUsageScanner {
-    enum ClaudeLogProviderFilter: Sendable {
+public enum CostUsageScanner {
+    public enum ClaudeLogProviderFilter: Sendable {
         case all
         case vertexAIOnly
         case excludeVertexAI
     }
 
-    struct Options: Sendable {
-        var codexSessionsRoot: URL?
-        var claudeProjectsRoots: [URL]?
-        var cacheRoot: URL?
-        var refreshMinIntervalSeconds: TimeInterval = 60
-        var claudeLogProviderFilter: ClaudeLogProviderFilter = .all
+    public struct Options: Sendable {
+        public var codexSessionsRoot: URL?
+        public var claudeProjectsRoots: [URL]?
+        public var cacheRoot: URL?
+        public var refreshMinIntervalSeconds: TimeInterval = 60
+        public var claudeLogProviderFilter: ClaudeLogProviderFilter = .all
         // Force a full rescan, ignoring per-file cache and incremental offsets.
-        var forceRescan: Bool = false
+        public var forceRescan: Bool = false
+        // Scan all available log files regardless of date range (for usage history window).
+        public var allTime: Bool = false
 
-        init(
+        public init(
             codexSessionsRoot: URL? = nil,
             claudeProjectsRoots: [URL]? = nil,
             cacheRoot: URL? = nil,
             claudeLogProviderFilter: ClaudeLogProviderFilter = .all,
-            forceRescan: Bool = false)
+            forceRescan: Bool = false,
+            allTime: Bool = false)
         {
             self.codexSessionsRoot = codexSessionsRoot
             self.claudeProjectsRoots = claudeProjectsRoots
             self.cacheRoot = cacheRoot
             self.claudeLogProviderFilter = claudeLogProviderFilter
             self.forceRescan = forceRescan
+            self.allTime = allTime
         }
     }
 
@@ -43,14 +47,16 @@ enum CostUsageScanner {
         let parsedBytes: Int64
     }
 
-    static func loadDailyReport(
+    public static func loadDailyReport(
         provider: UsageProvider,
         since: Date,
         until: Date,
         now: Date = Date(),
         options: Options = Options()) -> CostUsageDailyReport
     {
-        let range = CostUsageDayRange(since: since, until: until)
+        let range = options.allTime
+            ? CostUsageDayRange.allTime
+            : CostUsageDayRange(since: since, until: until)
 
         switch provider {
         case .codex:
@@ -91,12 +97,30 @@ enum CostUsageScanner {
         let untilKey: String
         let scanSinceKey: String
         let scanUntilKey: String
+        let isAllTime: Bool
 
         init(since: Date, until: Date) {
             self.sinceKey = Self.dayKey(from: since)
             self.untilKey = Self.dayKey(from: until)
             self.scanSinceKey = Self.dayKey(from: Calendar.current.date(byAdding: .day, value: -1, to: since) ?? since)
             self.scanUntilKey = Self.dayKey(from: Calendar.current.date(byAdding: .day, value: 1, to: until) ?? until)
+            self.isAllTime = false
+        }
+
+        /// A range that includes all possible dates (for all-time usage history).
+        static let allTime = CostUsageDayRange(
+            sinceKey: "0000-01-01",
+            untilKey: "9999-12-31",
+            scanSinceKey: "0000-01-01",
+            scanUntilKey: "9999-12-31",
+            isAllTime: true)
+
+        private init(sinceKey: String, untilKey: String, scanSinceKey: String, scanUntilKey: String, isAllTime: Bool) {
+            self.sinceKey = sinceKey
+            self.untilKey = untilKey
+            self.scanSinceKey = scanSinceKey
+            self.scanUntilKey = scanUntilKey
+            self.isAllTime = isAllTime
         }
 
         static func dayKey(from date: Date) -> String {
@@ -128,10 +152,16 @@ enum CostUsageScanner {
             .appendingPathComponent("sessions", isDirectory: true)
     }
 
-    private static func listCodexSessionFiles(root: URL, scanSinceKey: String, scanUntilKey: String) -> [URL] {
+    private static func listCodexSessionFiles(root: URL, range: CostUsageDayRange) -> [URL] {
+        // For all-time, enumerate the entire directory tree
+        if range.isAllTime {
+            return Self.listAllCodexSessionFiles(root: root)
+        }
+
+        // For date-bounded range, iterate day-by-day
         var out: [URL] = []
-        var date = Self.parseDayKey(scanSinceKey) ?? Date()
-        let untilDate = Self.parseDayKey(scanUntilKey) ?? date
+        var date = Self.parseDayKey(range.scanSinceKey) ?? Date()
+        let untilDate = Self.parseDayKey(range.scanUntilKey) ?? date
 
         while date <= untilDate {
             let comps = Calendar.current.dateComponents([.year, .month, .day], from: date)
@@ -154,6 +184,24 @@ enum CostUsageScanner {
             }
 
             date = Calendar.current.date(byAdding: .day, value: 1, to: date) ?? untilDate.addingTimeInterval(1)
+        }
+
+        return out
+    }
+
+    /// Enumerate all .jsonl files in the Codex sessions directory (for all-time scanning).
+    private static func listAllCodexSessionFiles(root: URL) -> [URL] {
+        var out: [URL] = []
+
+        guard let enumerator = FileManager.default.enumerator(
+            at: root,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles, .skipsPackageDescendants])
+        else { return out }
+
+        for case let url as URL in enumerator {
+            guard url.pathExtension.lowercased() == "jsonl" else { continue }
+            out.append(url)
         }
 
         return out
@@ -279,17 +327,14 @@ enum CostUsageScanner {
     }
 
     private static func loadCodexDaily(range: CostUsageDayRange, now: Date, options: Options) -> CostUsageDailyReport {
-        var cache = CostUsageCacheIO.load(provider: .codex, cacheRoot: options.cacheRoot)
+        var cache = CostUsageCacheIO.load(provider: .codex, cacheRoot: options.cacheRoot, allTime: range.isAllTime)
         let nowMs = Int64(now.timeIntervalSince1970 * 1000)
 
         let refreshMs = Int64(max(0, options.refreshMinIntervalSeconds) * 1000)
         let shouldRefresh = refreshMs == 0 || cache.lastScanUnixMs == 0 || nowMs - cache.lastScanUnixMs > refreshMs
 
         let root = self.defaultCodexSessionsRoot(options: options)
-        let files = Self.listCodexSessionFiles(
-            root: root,
-            scanSinceKey: range.scanSinceKey,
-            scanUntilKey: range.scanUntilKey)
+        let files = Self.listCodexSessionFiles(root: root, range: range)
         let filePathsInScan = Set(files.map(\.path))
 
         if shouldRefresh {
@@ -359,9 +404,12 @@ enum CostUsageScanner {
                 cache.files.removeValue(forKey: key)
             }
 
-            Self.pruneDays(cache: &cache, sinceKey: range.scanSinceKey, untilKey: range.scanUntilKey)
+            // Don't prune days for all-time cache - keep everything
+            if !range.isAllTime {
+                Self.pruneDays(cache: &cache, sinceKey: range.scanSinceKey, untilKey: range.scanUntilKey)
+            }
             cache.lastScanUnixMs = nowMs
-            CostUsageCacheIO.save(provider: .codex, cache: cache, cacheRoot: options.cacheRoot)
+            CostUsageCacheIO.save(provider: .codex, cache: cache, cacheRoot: options.cacheRoot, allTime: range.isAllTime)
         }
 
         return Self.buildCodexReportFromCache(cache: cache, range: range)
