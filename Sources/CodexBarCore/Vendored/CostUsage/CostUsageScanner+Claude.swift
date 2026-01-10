@@ -264,6 +264,7 @@ extension CostUsageScanner {
         var touched: Set<String>
         let range: CostUsageDayRange
         let providerFilter: ClaudeLogProviderFilter
+        let isAllTime: Bool
 
         init(cache: CostUsageCache, range: CostUsageDayRange, providerFilter: ClaudeLogProviderFilter) {
             self.cache = cache
@@ -271,6 +272,7 @@ extension CostUsageScanner {
             self.touched = []
             self.range = range
             self.providerFilter = providerFilter
+            self.isAllTime = range.isAllTime
         }
     }
 
@@ -363,7 +365,7 @@ extension CostUsageScanner {
         let rootMtime = (rootAttrs[.modificationDate] as? Date)?.timeIntervalSince1970 ?? 0
         let rootMtimeMs = Int64(rootMtime * 1000)
         let cachedRootMtime = rootCandidates.compactMap { state.rootCache[$0] }.first
-        let canSkipEnumeration = cachedRootMtime == rootMtimeMs && rootMtimeMs > 0
+        let canSkipEnumeration = !state.isAllTime && cachedRootMtime == rootMtimeMs && rootMtimeMs > 0
 
         if canSkipEnumeration {
             let cachedPaths = state.cache.files.keys.filter { path in

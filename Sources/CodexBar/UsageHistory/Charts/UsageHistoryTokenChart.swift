@@ -9,6 +9,30 @@ struct UsageHistoryTokenChart: View {
 
     @State private var selectedEntryId: String?
 
+    private var trendLinePoints: [(label: String, value: Double)] {
+        let data = self.entries
+        guard data.count >= 2 else { return [] }
+
+        let n = Double(data.count)
+        let xs = data.enumerated().map { Double($0.offset) }
+        let ys = data.map { Double($0.totalTokens) }
+
+        let sumX = xs.reduce(0, +)
+        let sumY = ys.reduce(0, +)
+        let sumXY = zip(xs, ys).map(*).reduce(0, +)
+        let sumX2 = xs.map { $0 * $0 }.reduce(0, +)
+
+        let denominator = n * sumX2 - sumX * sumX
+        guard denominator != 0 else { return [] }
+
+        let slope = (n * sumXY - sumX * sumY) / denominator
+        let intercept = (sumY - slope * sumX) / n
+
+        return data.enumerated().map { index, entry in
+            (label: entry.periodLabel, value: max(0, intercept + slope * Double(index)))
+        }
+    }
+
     var body: some View {
         if self.entries.isEmpty {
             self.emptyView
@@ -31,6 +55,15 @@ struct UsageHistoryTokenChart: View {
                         x: .value("Period", entry.periodLabel),
                         y: .value("Tokens", entry.totalTokens))
                         .foregroundStyle(self.barColor.opacity(self.selectedEntryId == entry.id ? 1.0 : 0.8))
+                }
+
+                ForEach(Array(self.trendLinePoints.enumerated()), id: \.offset) { _, point in
+                    LineMark(
+                        x: .value("Period", point.label),
+                        y: .value("Trend", point.value))
+                        .foregroundStyle(self.barColor)
+                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 3]))
+                        .interpolationMethod(.linear)
                 }
             }
             .chartXAxis {
@@ -57,13 +90,14 @@ struct UsageHistoryTokenChart: View {
                     Rectangle()
                         .fill(.clear)
                         .contentShape(Rectangle())
-                        .gesture(DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                self.updateSelection(at: value.location, proxy: proxy, geo: geo)
-                            }
-                            .onEnded { _ in
+                        .onContinuousHover { phase in
+                            switch phase {
+                            case .active(let location):
+                                self.updateSelection(at: location, proxy: proxy, geo: geo)
+                            case .ended:
                                 self.selectedEntryId = nil
-                            })
+                            }
+                        }
                 }
             }
 

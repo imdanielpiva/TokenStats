@@ -17,6 +17,30 @@ struct UsageHistoryCostChart: View {
         self.entriesWithCost.max { ($0.costUSD ?? 0) < ($1.costUSD ?? 0) }
     }
 
+    private var trendLinePoints: [(label: String, value: Double)] {
+        let data = self.entriesWithCost
+        guard data.count >= 2 else { return [] }
+
+        let n = Double(data.count)
+        let xs = data.enumerated().map { Double($0.offset) }
+        let ys = data.map { $0.costUSD ?? 0 }
+
+        let sumX = xs.reduce(0, +)
+        let sumY = ys.reduce(0, +)
+        let sumXY = zip(xs, ys).map(*).reduce(0, +)
+        let sumX2 = xs.map { $0 * $0 }.reduce(0, +)
+
+        let denominator = n * sumX2 - sumX * sumX
+        guard denominator != 0 else { return [] }
+
+        let slope = (n * sumXY - sumX * sumY) / denominator
+        let intercept = (sumY - slope * sumX) / n
+
+        return data.enumerated().map { index, entry in
+            (label: entry.periodLabel, value: max(0, intercept + slope * Double(index)))
+        }
+    }
+
     var body: some View {
         if self.entriesWithCost.isEmpty {
             self.emptyView
@@ -41,7 +65,6 @@ struct UsageHistoryCostChart: View {
                         .foregroundStyle(self.barColor(for: entry))
                 }
 
-                // Peak highlight cap
                 if let peak = self.peakEntry, let peakCost = peak.costUSD {
                     let capHeight = peakCost * 0.05
                     let capStart = max(peakCost - capHeight, 0)
@@ -50,6 +73,15 @@ struct UsageHistoryCostChart: View {
                         yStart: .value("Cap start", capStart),
                         yEnd: .value("Cap end", peakCost))
                         .foregroundStyle(Color.yellow)
+                }
+
+                ForEach(Array(self.trendLinePoints.enumerated()), id: \.offset) { _, point in
+                    LineMark(
+                        x: .value("Period", point.label),
+                        y: .value("Trend", point.value))
+                        .foregroundStyle(self.trendLineColor)
+                        .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 3]))
+                        .interpolationMethod(.linear)
                 }
             }
             .chartXAxis {
@@ -76,13 +108,14 @@ struct UsageHistoryCostChart: View {
                     Rectangle()
                         .fill(.clear)
                         .contentShape(Rectangle())
-                        .gesture(DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                self.updateSelection(at: value.location, proxy: proxy, geo: geo)
-                            }
-                            .onEnded { _ in
+                        .onContinuousHover { phase in
+                            switch phase {
+                            case .active(let location):
+                                self.updateSelection(at: location, proxy: proxy, geo: geo)
+                            case .ended:
                                 self.selectedEntryId = nil
-                            })
+                            }
+                        }
                 }
             }
 
@@ -128,18 +161,19 @@ struct UsageHistoryCostChart: View {
         }
     }
 
-    private func barColor(for entry: CostUsageAggregatedEntry) -> Color {
-        let baseColor: Color
+    private var trendLineColor: Color {
         switch self.provider {
         case .claude:
-            baseColor = Color(red: 0.84, green: 0.45, blue: 0.28)
+            Color(red: 0.84, green: 0.45, blue: 0.28)
         case .codex:
-            baseColor = Color(red: 0.10, green: 0.65, blue: 0.45)
+            Color(red: 0.10, green: 0.65, blue: 0.45)
         case .vertexai:
-            baseColor = Color(red: 0.25, green: 0.52, blue: 0.96)
+            Color(red: 0.25, green: 0.52, blue: 0.96)
         }
+    }
 
-        return baseColor.opacity(self.selectedEntryId == entry.id ? 1.0 : 0.8)
+    private func barColor(for entry: CostUsageAggregatedEntry) -> Color {
+        return self.trendLineColor.opacity(self.selectedEntryId == entry.id ? 1.0 : 0.8)
     }
 
     private func updateSelection(at location: CGPoint, proxy: ChartProxy, geo: GeometryProxy) {
