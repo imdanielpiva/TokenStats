@@ -285,6 +285,8 @@ struct UsageHistoryBudgetSection: View {
             Color(red: 0.10, green: 0.65, blue: 0.45)
         case .vertexai:
             Color(red: 0.25, green: 0.52, blue: 0.96)
+        case .amp:
+            Color(red: 0.95, green: 0.31, blue: 0.25)
         }
     }
 

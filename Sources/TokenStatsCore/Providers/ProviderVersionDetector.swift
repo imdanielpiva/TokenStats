@@ -28,6 +28,18 @@ public enum ProviderVersionDetector {
         return nil
     }
 
+    public static func ampVersion() -> String? {
+        guard let path = TTYCommandRunner.which("amp") else { return nil }
+        let candidates = [
+            ["--version"],
+            ["-V"],
+        ]
+        for args in candidates {
+            if let version = Self.run(path: path, args: args) { return version }
+        }
+        return nil
+    }
+
     private static func run(path: String, args: [String]) -> String? {
         let proc = Process()
         proc.executableURL = URL(fileURLWithPath: path)

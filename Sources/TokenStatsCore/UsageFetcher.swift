@@ -47,6 +47,41 @@ public struct ProviderIdentitySnapshot: Codable, Sendable {
     }
 }
 
+/// Amp-specific credits snapshot (not percentage-based).
+public struct AmpCreditsSnapshot: Codable, Sendable {
+    public let remainingToday: Double
+    public let spentToday: Double
+    public let spentTotal: Double
+    public let tokensToday: Int
+    public let tokensTotal: Int
+    public let threadsToday: Int
+    public let threadsTotal: Int
+    public let averageCreditsPerThread: Double?
+    public let averageTokensPerThread: Int?
+
+    public init(
+        remainingToday: Double,
+        spentToday: Double,
+        spentTotal: Double,
+        tokensToday: Int,
+        tokensTotal: Int,
+        threadsToday: Int,
+        threadsTotal: Int,
+        averageCreditsPerThread: Double?,
+        averageTokensPerThread: Int?)
+    {
+        self.remainingToday = remainingToday
+        self.spentToday = spentToday
+        self.spentTotal = spentTotal
+        self.tokensToday = tokensToday
+        self.tokensTotal = tokensTotal
+        self.threadsToday = threadsToday
+        self.threadsTotal = threadsTotal
+        self.averageCreditsPerThread = averageCreditsPerThread
+        self.averageTokensPerThread = averageTokensPerThread
+    }
+}
+
 public struct UsageSnapshot: Codable, Sendable {
     public let primary: RateWindow?
     public let secondary: RateWindow?
@@ -54,6 +89,7 @@ public struct UsageSnapshot: Codable, Sendable {
     public let providerCost: ProviderCostSnapshot?
     public let zaiUsage: ZaiUsageSnapshot?
     public let cursorRequests: CursorRequestUsage?
+    public let ampCredits: AmpCreditsSnapshot?
     public let updatedAt: Date
     public let identity: ProviderIdentitySnapshot?
 
@@ -62,6 +98,7 @@ public struct UsageSnapshot: Codable, Sendable {
         case secondary
         case tertiary
         case providerCost
+        case ampCredits
         case updatedAt
         case identity
         case accountEmail
@@ -76,6 +113,7 @@ public struct UsageSnapshot: Codable, Sendable {
         providerCost: ProviderCostSnapshot? = nil,
         zaiUsage: ZaiUsageSnapshot? = nil,
         cursorRequests: CursorRequestUsage? = nil,
+        ampCredits: AmpCreditsSnapshot? = nil,
         updatedAt: Date,
         identity: ProviderIdentitySnapshot? = nil)
     {
@@ -85,6 +123,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.providerCost = providerCost
         self.zaiUsage = zaiUsage
         self.cursorRequests = cursorRequests
+        self.ampCredits = ampCredits
         self.updatedAt = updatedAt
         self.identity = identity
     }
@@ -97,6 +136,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.providerCost = try container.decodeIfPresent(ProviderCostSnapshot.self, forKey: .providerCost)
         self.zaiUsage = nil // Not persisted, fetched fresh each time
         self.cursorRequests = nil // Not persisted, fetched fresh each time
+        self.ampCredits = try container.decodeIfPresent(AmpCreditsSnapshot.self, forKey: .ampCredits)
         self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
         if let identity = try container.decodeIfPresent(ProviderIdentitySnapshot.self, forKey: .identity) {
             self.identity = identity
@@ -123,6 +163,7 @@ public struct UsageSnapshot: Codable, Sendable {
         try container.encode(self.secondary, forKey: .secondary)
         try container.encode(self.tertiary, forKey: .tertiary)
         try container.encodeIfPresent(self.providerCost, forKey: .providerCost)
+        try container.encodeIfPresent(self.ampCredits, forKey: .ampCredits)
         try container.encode(self.updatedAt, forKey: .updatedAt)
         try container.encodeIfPresent(self.identity, forKey: .identity)
         try container.encodeIfPresent(self.identity?.accountEmail, forKey: .accountEmail)
@@ -158,6 +199,7 @@ public struct UsageSnapshot: Codable, Sendable {
             providerCost: self.providerCost,
             zaiUsage: self.zaiUsage,
             cursorRequests: self.cursorRequests,
+            ampCredits: self.ampCredits,
             updatedAt: self.updatedAt,
             identity: scopedIdentity)
     }

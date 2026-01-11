@@ -140,6 +140,8 @@ struct UsageHistoryTokenBreakdownChart: View {
             Color(red: 0.20, green: 0.70, blue: 0.55) // Lighter Codex green
         case .vertexai:
             Color(red: 0.35, green: 0.60, blue: 0.96) // Lighter Google blue
+        case .amp:
+            Color(red: 0.97, green: 0.45, blue: 0.40) // Lighter Amp red
         }
     }
 
@@ -151,6 +153,8 @@ struct UsageHistoryTokenBreakdownChart: View {
             Color(red: 0.05, green: 0.55, blue: 0.35) // Darker Codex green
         case .vertexai:
             Color(red: 0.15, green: 0.42, blue: 0.86) // Darker Google blue
+        case .amp:
+            Color(red: 0.85, green: 0.20, blue: 0.15) // Darker Amp red
         }
     }
 

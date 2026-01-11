@@ -235,6 +235,7 @@ final class UsageStore {
     var antigravityVersion: String?
     var cursorVersion: String?
     var kiroVersion: String?
+    var ampVersion: String?
     var isRefreshing = false
     private(set) var refreshingProviders: Set<UsageProvider> = []
     var debugForceAnimation = false
@@ -350,6 +351,7 @@ final class UsageStore {
         case .vertexai: nil
         case .kiro: self.kiroVersion
         case .augment: nil
+        case .amp: self.ampVersion
         }
     }
 
@@ -1313,6 +1315,10 @@ extension UsageStore {
                 let text = await self.debugAugmentLog()
                 await MainActor.run { self.probeLogs[.augment] = text }
                 return text
+            case .amp:
+                let text = "Amp debug: threads at ~/.local/share/amp/threads"
+                await MainActor.run { self.probeLogs[.amp] = text }
+                return text
             }
         }.value
     }
@@ -1476,6 +1482,7 @@ extension UsageStore {
             let geminiVer = Self.readCLI("gemini", args: ["--version"])
             let antigravityVer = await AntigravityStatusProbe.detectVersion()
             let kiroVer = KiroStatusProbe.detectVersion()
+            let ampVer = ProviderVersionDetector.ampVersion()
             await MainActor.run {
                 self.codexVersion = codexVer
                 self.claudeVersion = claudeVer
@@ -1483,6 +1490,7 @@ extension UsageStore {
                 self.zaiVersion = nil
                 self.antigravityVersion = antigravityVer
                 self.kiroVersion = kiroVer
+                self.ampVersion = ampVer
             }
         }
     }

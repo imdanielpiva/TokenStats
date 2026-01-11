@@ -72,6 +72,11 @@ struct ProviderUsageCardView: View {
                 self.providerCostSection(cost: providerCost)
             }
 
+            // Amp credits section
+            if self.provider == .amp {
+                self.ampCreditsSection
+            }
+
             // Token cost section
             if self.settings.isCostUsageEffectivelyEnabled(for: self.provider) {
                 self.tokenCostSection
@@ -170,6 +175,68 @@ struct ProviderUsageCardView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+        }
+    }
+
+    // MARK: - Amp Credits Section
+
+    @ViewBuilder
+    private var ampCreditsSection: some View {
+        if let ampCredits = self.snapshot.ampCredits {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Daily Credits")
+                    .font(.body)
+                    .fontWeight(.medium)
+
+                // Progress bar showing remaining credits (green when high, red when low)
+                let percentRemaining = min(100, max(0, (ampCredits.remainingToday / 10.0) * 100))
+                WindowProgressBar(percent: percentRemaining, tint: self.ampCreditsTint(percentRemaining: percentRemaining))
+
+                HStack(alignment: .firstTextBaseline) {
+                    Text(String(format: "$%.2f remaining", ampCredits.remainingToday))
+                        .font(.footnote)
+                    Spacer()
+                    Text("+$0.42/hr")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Divider()
+
+            // Usage stats
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Usage")
+                    .font(.body)
+                    .fontWeight(.medium)
+
+                let todayTokens = UsageFormatter.tokenCountString(ampCredits.tokensToday)
+                Text("Today: \(String(format: "$%.2f", ampCredits.spentToday)) · \(todayTokens) tokens")
+                    .font(.caption)
+
+                let totalTokens = UsageFormatter.tokenCountString(ampCredits.tokensTotal)
+                Text("Total: \(String(format: "$%.2f", ampCredits.spentTotal)) · \(totalTokens) tokens")
+                    .font(.caption)
+
+                if let avgCredits = ampCredits.averageCreditsPerThread,
+                   let avgTokens = ampCredits.averageTokensPerThread
+                {
+                    let avgTokensStr = UsageFormatter.tokenCountString(avgTokens)
+                    Text("Avg per thread: \(String(format: "$%.2f", avgCredits)) · \(avgTokensStr) tokens")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    private func ampCreditsTint(percentRemaining: Double) -> Color {
+        if percentRemaining > 50 {
+            return .green
+        } else if percentRemaining > 20 {
+            return .yellow
+        } else {
+            return .red
         }
     }
 

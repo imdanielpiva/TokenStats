@@ -174,6 +174,10 @@ struct UsageHistoryWeekdayChart: View {
             return isWeekend
                 ? Color(red: 0.15, green: 0.42, blue: 0.86)
                 : Color(red: 0.25, green: 0.52, blue: 0.96)
+        case .amp:
+            return isWeekend
+                ? Color(red: 0.85, green: 0.20, blue: 0.15) // Darker Amp red for weekends
+                : Color(red: 0.95, green: 0.31, blue: 0.25)
         }
     }
 

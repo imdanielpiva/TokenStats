@@ -135,6 +135,7 @@ enum IconRenderer {
                     addGeminiTwist: Bool = false,
                     addAntigravityTwist: Bool = false,
                     addFactoryTwist: Bool = false,
+                    addAmpTwist: Bool = false,
                     blink: CGFloat = 0)
                 {
                     let rect = rectPx.rect()
@@ -569,6 +570,101 @@ enum IconRenderer {
                             drawBlinkAsterisk(cx: rdCx, cy: yCy)
                         }
                     }
+
+                    // Amp twist: diagonal slash marks inspired by the Amp logo
+                    if addAmpTwist {
+                        let ctx = NSGraphicsContext.current?.cgContext
+                        let centerXPx = rectPx.midXPx
+                        let barMidY = rectPx.y + rectPx.h / 2
+
+                        ctx?.saveGState()
+                        ctx?.setShouldAntialias(true)
+
+                        // Two diagonal slash cutouts (like the Amp mark's angular lines)
+                        let slashWidthPx = 2
+                        let slashHeightPx = 8
+                        let slashOffsetPx = 5
+                        let skewPx = 3 // horizontal skew for diagonal effect
+
+                        func drawSlashCutout(cx: Int, cy: Int) {
+                            let path = NSBezierPath()
+                            // Parallelogram shape (skewed rectangle)
+                            let x1 = Self.grid.pt(cx - slashWidthPx / 2 + skewPx)
+                            let y1 = Self.grid.pt(cy + slashHeightPx / 2)
+                            let x2 = Self.grid.pt(cx + slashWidthPx / 2 + skewPx)
+                            let y2 = Self.grid.pt(cy + slashHeightPx / 2)
+                            let x3 = Self.grid.pt(cx + slashWidthPx / 2 - skewPx)
+                            let y3 = Self.grid.pt(cy - slashHeightPx / 2)
+                            let x4 = Self.grid.pt(cx - slashWidthPx / 2 - skewPx)
+                            let y4 = Self.grid.pt(cy - slashHeightPx / 2)
+
+                            path.move(to: NSPoint(x: x1, y: y1))
+                            path.line(to: NSPoint(x: x2, y: y2))
+                            path.line(to: NSPoint(x: x3, y: y3))
+                            path.line(to: NSPoint(x: x4, y: y4))
+                            path.close()
+                            path.fill()
+                        }
+
+                        // Clear two diagonal slashes as eyes
+                        ctx?.setBlendMode(.clear)
+                        drawSlashCutout(cx: centerXPx - slashOffsetPx, cy: barMidY)
+                        drawSlashCutout(cx: centerXPx + slashOffsetPx, cy: barMidY)
+                        ctx?.setBlendMode(.normal)
+
+                        // Small accent mark above (like Amp's stacked diagonal motif)
+                        fillColor.withAlphaComponent(alpha).setFill()
+                        let accentWidthPx = 6
+                        let accentHeightPx = 2
+                        let accentY = rectPx.y + rectPx.h + 1
+                        let accentPath = NSBezierPath()
+                        accentPath.move(to: NSPoint(
+                            x: Self.grid.pt(centerXPx - accentWidthPx / 2 + 1),
+                            y: Self.grid.pt(accentY + accentHeightPx)))
+                        accentPath.line(to: NSPoint(
+                            x: Self.grid.pt(centerXPx + accentWidthPx / 2 + 1),
+                            y: Self.grid.pt(accentY + accentHeightPx)))
+                        accentPath.line(to: NSPoint(
+                            x: Self.grid.pt(centerXPx + accentWidthPx / 2 - 1),
+                            y: Self.grid.pt(accentY)))
+                        accentPath.line(to: NSPoint(
+                            x: Self.grid.pt(centerXPx - accentWidthPx / 2 - 1),
+                            y: Self.grid.pt(accentY)))
+                        accentPath.close()
+                        accentPath.fill()
+
+                        ctx?.restoreGState()
+
+                        // Blink: fill the slash cutouts
+                        if blink > 0.001 {
+                            let clamped = max(0, min(blink, 1))
+                            fillColor.withAlphaComponent(alpha).setFill()
+                            let blinkHeightPx = Int((CGFloat(slashHeightPx) * clamped).rounded())
+
+                            func drawBlinkSlash(cx: Int, cy: Int) {
+                                let path = NSBezierPath()
+                                let halfH = blinkHeightPx / 2
+                                let x1 = Self.grid.pt(cx - slashWidthPx / 2 + skewPx)
+                                let y1 = Self.grid.pt(cy + halfH)
+                                let x2 = Self.grid.pt(cx + slashWidthPx / 2 + skewPx)
+                                let y2 = Self.grid.pt(cy + halfH)
+                                let x3 = Self.grid.pt(cx + slashWidthPx / 2 - skewPx)
+                                let y3 = Self.grid.pt(cy - halfH)
+                                let x4 = Self.grid.pt(cx - slashWidthPx / 2 - skewPx)
+                                let y4 = Self.grid.pt(cy - halfH)
+
+                                path.move(to: NSPoint(x: x1, y: y1))
+                                path.line(to: NSPoint(x: x2, y: y2))
+                                path.line(to: NSPoint(x: x3, y: y3))
+                                path.line(to: NSPoint(x: x4, y: y4))
+                                path.close()
+                                path.fill()
+                            }
+
+                            drawBlinkSlash(cx: centerXPx - slashOffsetPx, cy: barMidY)
+                            drawBlinkSlash(cx: centerXPx + slashOffsetPx, cy: barMidY)
+                        }
+                    }
                 }
 
                 let topValue = primaryRemaining
@@ -593,6 +689,7 @@ enum IconRenderer {
                         addGeminiTwist: style == .gemini || style == .antigravity,
                         addAntigravityTwist: style == .antigravity,
                         addFactoryTwist: style == .factory,
+                        addAmpTwist: style == .amp,
                         blink: blink)
                     drawBar(rectPx: bottomRectPx, remaining: bottomValue)
                 } else if !hasWeekly {
@@ -609,6 +706,7 @@ enum IconRenderer {
                             addGeminiTwist: style == .gemini || style == .antigravity,
                             addAntigravityTwist: style == .antigravity,
                             addFactoryTwist: style == .factory,
+                            addAmpTwist: style == .amp,
                             blink: blink)
                         drawBar(rectPx: creditsBottomRectPx, remaining: nil, alpha: 0.45)
                     } else {
@@ -620,6 +718,7 @@ enum IconRenderer {
                             addGeminiTwist: style == .gemini || style == .antigravity,
                             addAntigravityTwist: style == .antigravity,
                             addFactoryTwist: style == .factory,
+                            addAmpTwist: style == .amp,
                             blink: blink)
                         drawBar(rectPx: bottomRectPx, remaining: nil, alpha: 0.45)
                     }
@@ -635,6 +734,7 @@ enum IconRenderer {
                             addGeminiTwist: style == .gemini || style == .antigravity,
                             addAntigravityTwist: style == .antigravity,
                             addFactoryTwist: style == .factory,
+                            addAmpTwist: style == .amp,
                             blink: blink)
                     } else {
                         // No credits available; fall back to 5h if present.
@@ -646,6 +746,7 @@ enum IconRenderer {
                             addGeminiTwist: style == .gemini || style == .antigravity,
                             addAntigravityTwist: style == .antigravity,
                             addFactoryTwist: style == .factory,
+                            addAmpTwist: style == .amp,
                             blink: blink)
                     }
                     drawBar(rectPx: creditsBottomRectPx, remaining: bottomValue)
@@ -715,6 +816,7 @@ enum IconRenderer {
         case .kiro: 9
         case .vertexai: 10
         case .augment: 11
+        case .amp: 12
         case .combined: 99
         }
     }

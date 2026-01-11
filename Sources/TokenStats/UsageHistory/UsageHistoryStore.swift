@@ -7,6 +7,7 @@ enum UsageHistoryProvider: String, CaseIterable, Identifiable, Sendable {
     case claude
     case codex
     case vertexai
+    case amp
 
     var id: String { self.rawValue }
 
@@ -15,6 +16,7 @@ enum UsageHistoryProvider: String, CaseIterable, Identifiable, Sendable {
         case .claude: "Claude"
         case .codex: "Codex"
         case .vertexai: "VertexAI"
+        case .amp: "Amp"
         }
     }
 
@@ -23,6 +25,7 @@ enum UsageHistoryProvider: String, CaseIterable, Identifiable, Sendable {
         case .claude: .claude
         case .codex: .codex
         case .vertexai: .vertexai
+        case .amp: .amp
         }
     }
 }
@@ -47,6 +50,7 @@ final class UsageHistoryStore {
     private(set) var claudeData: ProviderHistoryData?
     private(set) var codexData: ProviderHistoryData?
     private(set) var vertexaiData: ProviderHistoryData?
+    private(set) var ampData: ProviderHistoryData?
 
     // MARK: - Budget state
 
@@ -81,6 +85,7 @@ final class UsageHistoryStore {
         case .claude: self.claudeData
         case .codex: self.codexData
         case .vertexai: self.vertexaiData
+        case .amp: self.ampData
         }
     }
 
@@ -117,6 +122,7 @@ final class UsageHistoryStore {
             case .claude: if self.claudeData != nil { return }
             case .codex: if self.codexData != nil { return }
             case .vertexai: if self.vertexaiData != nil { return }
+            case .amp: if self.ampData != nil { return }
             }
         }
 
@@ -135,6 +141,7 @@ final class UsageHistoryStore {
             case .claude: self.claudeData = data
             case .codex: self.codexData = data
             case .vertexai: self.vertexaiData = data
+            case .amp: self.ampData = data
             }
         } catch {
             self.lastError = error.localizedDescription
