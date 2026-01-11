@@ -227,6 +227,15 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
     }
 
     private func updateVisibility() {
+        // Hide all status items when menu bar icon is disabled
+        guard self.settings.showMenuBarIcon else {
+            self.statusItem.isVisible = false
+            for item in self.statusItems.values {
+                item.isVisible = false
+            }
+            return
+        }
+
         let anyEnabled = !self.store.enabledProviders().isEmpty
         let force = self.store.debugForceAnimation
         if self.shouldMergeIcons {

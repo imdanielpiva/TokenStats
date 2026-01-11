@@ -46,13 +46,19 @@ struct CodexBarApp: App {
 
     @SceneBuilder
     var body: some Scene {
-        // Hidden 1×1 window to keep SwiftUI's lifecycle alive so `Settings` scene
-        // shows the native toolbar tabs even though the UI is AppKit-based.
-        WindowGroup("CodexBarLifecycleKeepalive") {
-            HiddenWindowView()
+        // Main window - primary desktop app window with provider sidebar and usage details
+        WindowGroup("TokenStats", id: "main") {
+            MainWindowView(
+                usageStore: self.store,
+                settings: self.settings)
         }
-        .defaultSize(width: 20, height: 20)
-        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1000, height: 700)
+        .windowResizability(.contentMinSize)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                // Remove "New Window" since we only want one main window
+            }
+        }
 
         Settings {
             PreferencesView(
@@ -64,6 +70,7 @@ struct CodexBarApp: App {
         .defaultSize(width: PreferencesTab.windowWidth, height: PreferencesTab.general.preferredHeight)
         .windowResizability(.contentSize)
 
+        // Keep Usage History as a separate detailed view accessible from menu
         Window("Usage History", id: "usage-history") {
             UsageHistoryWindow(usageStore: self.store)
         }

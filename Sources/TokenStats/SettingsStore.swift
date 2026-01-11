@@ -54,6 +54,12 @@ final class SettingsStore {
         }
     }
 
+    /// Show menu bar icon alongside the main desktop window.
+    /// When disabled, only the main window is used; the status bar icon is hidden.
+    var showMenuBarIcon: Bool {
+        didSet { self.userDefaults.set(self.showMenuBarIcon, forKey: "showMenuBarIcon") }
+    }
+
     /// Hidden toggle to reveal debug-only menu items (enable via defaults write com.steipete.CodexBar debugMenuEnabled
     /// -bool YES).
     var debugMenuEnabled: Bool {
@@ -337,6 +343,7 @@ final class SettingsStore {
         _ = self.providerOrderRaw
         _ = self.refreshFrequency
         _ = self.launchAtLogin
+        _ = self.showMenuBarIcon
         _ = self.debugMenuEnabled
         _ = self.statusChecksEnabled
         _ = self.sessionQuotaNotificationsEnabled
@@ -453,6 +460,7 @@ final class SettingsStore {
         let raw = userDefaults.string(forKey: "refreshFrequency") ?? RefreshFrequency.fiveMinutes.rawValue
         self.refreshFrequency = RefreshFrequency(rawValue: raw) ?? .fiveMinutes
         self.launchAtLogin = userDefaults.object(forKey: "launchAtLogin") as? Bool ?? false
+        self.showMenuBarIcon = userDefaults.object(forKey: "showMenuBarIcon") as? Bool ?? true
         self.debugMenuEnabled = userDefaults.object(forKey: "debugMenuEnabled") as? Bool ?? false
         self.debugLoadingPatternRaw = userDefaults.string(forKey: "debugLoadingPattern")
         self.statusChecksEnabled = userDefaults.object(forKey: "statusChecksEnabled") as? Bool ?? true

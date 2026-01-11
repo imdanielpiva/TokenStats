@@ -17,8 +17,12 @@ struct GeneralPane: View {
                         .textCase(.uppercase)
                     PreferenceToggleRow(
                         title: "Start at Login",
-                        subtitle: "Automatically opens CodexBar when you start your Mac.",
+                        subtitle: "Automatically opens TokenStats when you start your Mac.",
                         binding: self.$settings.launchAtLogin)
+                    PreferenceToggleRow(
+                        title: "Show Menu Bar Icon",
+                        subtitle: "Display usage icons in the menu bar alongside the main window.",
+                        binding: self.$settings.showMenuBarIcon)
                 }
 
                 Divider()
