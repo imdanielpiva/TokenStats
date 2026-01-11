@@ -140,6 +140,7 @@ struct UsageHistoryDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         self.summarySection(report: report)
+                        self.budgetSection(report: report)
                         self.streakSection
                         self.funStatsSection(report: report)
                         self.weekComparisonSection(report: report)
@@ -148,6 +149,7 @@ struct UsageHistoryDetailView: View {
                         self.tokenBreakdownSection(report: report)
                         self.weekdayChartSection(report: report)
                         self.costChartSection(report: report)
+                        self.cumulativeSpendSection(report: report)
                     }
                     .padding(16)
                 }
@@ -441,6 +443,46 @@ struct UsageHistoryDetailView: View {
                     entries: report.entries,
                     provider: self.store.selectedProvider)
                     .frame(height: 180)
+            }
+        }
+    }
+
+    // MARK: - Budget & Projections
+
+    @ViewBuilder
+    private func budgetSection(report: CostUsageAggregatedReport) -> some View {
+        // Only show when we have daily data for projections
+        if self.store.selectedPeriod == .day && report.totalCostUSD != nil {
+            UsageHistoryBudgetSection(
+                entries: report.entries,
+                provider: self.store.selectedProvider,
+                monthlyBudget: Binding(
+                    get: { self.store.currentProviderBudget },
+                    set: { self.store.currentProviderBudget = $0 }))
+        }
+    }
+
+    @ViewBuilder
+    private func cumulativeSpendSection(report: CostUsageAggregatedReport) -> some View {
+        // Only show when we have cost data
+        if report.totalCostUSD != nil && report.entries.count > 1 {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Cumulative Spend")
+                        .font(.headline)
+
+                    Spacer()
+
+                    if let total = report.totalCostUSD {
+                        Text("Total: \(UsageFormatter.usdString(total))")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                UsageHistoryCumulativeSpendChart(
+                    entries: report.entries,
+                    provider: self.store.selectedProvider)
+                    .frame(height: 200)
             }
         }
     }

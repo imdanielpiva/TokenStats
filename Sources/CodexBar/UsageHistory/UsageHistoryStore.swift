@@ -48,6 +48,32 @@ final class UsageHistoryStore {
     private(set) var codexData: ProviderHistoryData?
     private(set) var vertexaiData: ProviderHistoryData?
 
+    // MARK: - Budget state
+
+    @ObservationIgnored private let userDefaults = UserDefaults.standard
+
+    /// Get or set monthly budget for a provider.
+    func monthlyBudget(for provider: UsageHistoryProvider) -> Double? {
+        let key = "monthlyBudget_\(provider.rawValue)"
+        let value = self.userDefaults.double(forKey: key)
+        return value > 0 ? value : nil
+    }
+
+    func setMonthlyBudget(_ budget: Double?, for provider: UsageHistoryProvider) {
+        let key = "monthlyBudget_\(provider.rawValue)"
+        if let budget, budget > 0 {
+            self.userDefaults.set(budget, forKey: key)
+        } else {
+            self.userDefaults.removeObject(forKey: key)
+        }
+    }
+
+    /// Binding for current provider's budget.
+    var currentProviderBudget: Double? {
+        get { self.monthlyBudget(for: self.selectedProvider) }
+        set { self.setMonthlyBudget(newValue, for: self.selectedProvider) }
+    }
+
     // MARK: - Computed accessors
 
     var currentProviderData: ProviderHistoryData? {
