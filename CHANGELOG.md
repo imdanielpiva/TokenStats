@@ -6,9 +6,10 @@
 - **Project renamed from CodexBar to TokenStats.** Bundle identifiers remain unchanged (`com.steipete.codexbar`) to preserve user settings and keychain data.
 
 ### Providers
-- Amp: add provider with credit-based usage from local thread files (`~/.local/share/amp/threads`).
-- Amp: show credits remaining bar with replenishment indicator (+$0.42/hr), usage stats (today/total), and per-thread averages.
+- Amp: add provider with pay-as-you-go usage from local thread files (`~/.local/share/amp/threads`).
+- Amp: show daily credits bar with replenishment indicator (+$0.42/hr), usage stats (today/total), and per-thread averages.
 - Amp: full Usage History support with token/cost charts and model breakdowns.
+- Amp: fix cost calculation (credits stored in cents, not dollars).
 - Vertex AI: add provider with quota-based usage from gcloud ADC. Thanks @bahag-chaurasiak!
 - Vertex AI: token costs are shown via the Claude provider (same local logs).
 - Vertex AI: harden quota usage parsing for edge-case responses.
