@@ -65,7 +65,7 @@ struct CodexBarApp: App {
         .windowResizability(.contentSize)
 
         Window("Usage History", id: "usage-history") {
-            UsageHistoryWindow()
+            UsageHistoryWindow(usageStore: self.store)
         }
         .defaultSize(width: 900, height: 650)
         .windowResizability(.contentMinSize)

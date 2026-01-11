@@ -3,12 +3,18 @@ import SwiftUI
 
 /// Main content view for the Usage History window.
 struct UsageHistoryWindow: View {
+    let usageStore: UsageStore
     @State private var store = UsageHistoryStore()
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
+    private var enabledHistoryProviders: [UsageHistoryProvider] {
+        let enabled = self.usageStore.enabledProviders()
+        return UsageHistoryProvider.allCases.filter { enabled.contains($0.usageProvider) }
+    }
+
     var body: some View {
         NavigationSplitView(columnVisibility: self.$columnVisibility) {
-            UsageHistorySidebar(store: self.store)
+            UsageHistorySidebar(store: self.store, enabledProviders: self.enabledHistoryProviders)
         } detail: {
             UsageHistoryDetailView(store: self.store)
         }
@@ -28,6 +34,9 @@ struct UsageHistoryWindow: View {
             }
         }
         .task {
+            if let first = self.enabledHistoryProviders.first {
+                self.store.selectedProvider = first
+            }
             await self.store.loadCurrentProviderIfNeeded()
         }
     }
@@ -36,10 +45,11 @@ struct UsageHistoryWindow: View {
 /// Sidebar showing provider list.
 struct UsageHistorySidebar: View {
     @Bindable var store: UsageHistoryStore
+    let enabledProviders: [UsageHistoryProvider]
 
     var body: some View {
         List(selection: self.$store.selectedProvider) {
-            ForEach(UsageHistoryProvider.allCases) { provider in
+            ForEach(self.enabledProviders) { provider in
                 UsageHistorySidebarRow(
                     provider: provider,
                     isSelected: self.store.selectedProvider == provider,
@@ -337,7 +347,3 @@ struct UsageHistoryDetailView: View {
     }
 }
 
-#Preview {
-    UsageHistoryWindow()
-        .frame(width: 900, height: 650)
-}
