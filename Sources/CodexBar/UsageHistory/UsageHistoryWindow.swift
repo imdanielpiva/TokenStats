@@ -141,7 +141,12 @@ struct UsageHistoryDetailView: View {
                     VStack(alignment: .leading, spacing: 24) {
                         self.summarySection(report: report)
                         self.streakSection
+                        self.funStatsSection(report: report)
+                        self.weekComparisonSection(report: report)
+                        self.calendarHeatmapSection(report: report)
                         self.tokenChartSection(report: report)
+                        self.tokenBreakdownSection(report: report)
+                        self.weekdayChartSection(report: report)
                         self.costChartSection(report: report)
                     }
                     .padding(16)
@@ -343,6 +348,100 @@ struct UsageHistoryDetailView: View {
                 entries: report.entries,
                 provider: self.store.selectedProvider)
                 .frame(height: 200)
+        }
+    }
+
+    // MARK: - New Analytics Sections
+
+    @ViewBuilder
+    private func funStatsSection(report: CostUsageAggregatedReport) -> some View {
+        let stats = UsageHistoryFunStats(entries: report.entries, report: report)
+        if !report.entries.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Insights")
+                    .font(.headline)
+
+                stats
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(8)
+        }
+    }
+
+    @ViewBuilder
+    private func weekComparisonSection(report: CostUsageAggregatedReport) -> some View {
+        // Only show for day period
+        if self.store.selectedPeriod == .day && report.entries.count > 7 {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Week Comparison")
+                    .font(.headline)
+
+                UsageHistoryWeekComparison(entries: report.entries)
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(8)
+        }
+    }
+
+    @ViewBuilder
+    private func calendarHeatmapSection(report: CostUsageAggregatedReport) -> some View {
+        // Only show for day period with enough data
+        if self.store.selectedPeriod == .day && report.entries.count > 7 {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Activity")
+                    .font(.headline)
+
+                UsageHistoryCalendarHeatmap(
+                    entries: report.entries,
+                    provider: self.store.selectedProvider)
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(8)
+        }
+    }
+
+    private func tokenBreakdownSection(report: CostUsageAggregatedReport) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Input vs Output Tokens")
+                    .font(.headline)
+
+                Spacer()
+
+                // Show ratio in header
+                let totalInput = report.totalInputTokens
+                let totalOutput = report.totalOutputTokens
+                if totalInput + totalOutput > 0 {
+                    let outputRatio = Double(totalOutput) / Double(totalInput + totalOutput) * 100
+                    Text("\(Int(outputRatio))% output")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            UsageHistoryTokenBreakdownChart(
+                entries: report.entries,
+                provider: self.store.selectedProvider)
+                .frame(height: 200)
+        }
+    }
+
+    @ViewBuilder
+    private func weekdayChartSection(report: CostUsageAggregatedReport) -> some View {
+        // Only show for day period with enough data
+        if self.store.selectedPeriod == .day && report.entries.count > 7 {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Usage by Day of Week")
+                    .font(.headline)
+
+                UsageHistoryWeekdayChart(
+                    entries: report.entries,
+                    provider: self.store.selectedProvider)
+                    .frame(height: 180)
+            }
         }
     }
 }
