@@ -20,6 +20,13 @@
 - Claude: fix OAuth “Extra usage” spend/limit units when the API returns minor currency units (#97).
 - Usage formatting: fix currency parsing/formatting on non-US locales (e.g., pt-BR). Thanks @mneves75!
 
+### Desktop App
+- **TokenStats is now a full desktop macOS app** with proper window management and dock presence.
+- New main window with NavigationSplitView: provider sidebar + usage detail area.
+- All Usage History charts integrated into the main window (budget, streaks, insights, week comparison, calendar heatmap, token charts, input/output breakdown, weekday chart, cost, cumulative spend).
+- Menu bar icon is now optional: toggle "Show Menu Bar Icon" in Settings → General (enabled by default).
+- App now appears in the dock and Cmd+Tab switcher.
+
 ### Preferences & UI
 - Usage History: add input vs output tokens stacked bar chart with breakdown percentages.
 - Usage History: add day-of-week usage analysis chart with busiest day highlight.
