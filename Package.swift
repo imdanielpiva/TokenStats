@@ -5,14 +5,14 @@ import PackageDescription
 
 let sweetCookieKitPath = "../SweetCookieKit"
 let useLocalSweetCookieKit =
-    ProcessInfo.processInfo.environment["CODEXBAR_USE_LOCAL_SWEETCOOKIEKIT"] == "1"
+    ProcessInfo.processInfo.environment["TOKENSTATS_USE_LOCAL_SWEETCOOKIEKIT"] == "1"
 let sweetCookieKitDependency: Package.Dependency =
     useLocalSweetCookieKit && FileManager.default.fileExists(atPath: sweetCookieKitPath)
     ? .package(path: sweetCookieKitPath)
     : .package(url: "https://github.com/steipete/SweetCookieKit", from: "0.2.0")
 
 let package = Package(
-    name: "CodexBar",
+    name: "TokenStats",
     platforms: [
         .macOS(.v14),
     ],
@@ -27,9 +27,9 @@ let package = Package(
     targets: {
         var targets: [Target] = [
             .target(
-                name: "CodexBarCore",
+                name: "TokenStatsCore",
                 dependencies: [
-                    "CodexBarMacroSupport",
+                    "TokenStatsMacroSupport",
                     .product(name: "Logging", package: "swift-log"),
                     .product(name: "SweetCookieKit", package: "SweetCookieKit"),
                 ],
@@ -37,30 +37,30 @@ let package = Package(
                     .enableUpcomingFeature("StrictConcurrency"),
                 ]),
             .macro(
-                name: "CodexBarMacros",
+                name: "TokenStatsMacros",
                 dependencies: [
                     .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
                     .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
                     .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 ]),
             .target(
-                name: "CodexBarMacroSupport",
+                name: "TokenStatsMacroSupport",
                 dependencies: [
-                    "CodexBarMacros",
+                    "TokenStatsMacros",
                 ]),
             .executableTarget(
-                name: "CodexBarCLI",
+                name: "TokenStatsCLI",
                 dependencies: [
-                    "CodexBarCore",
+                    "TokenStatsCore",
                     .product(name: "Commander", package: "Commander"),
                 ],
-                path: "Sources/CodexBarCLI",
+                path: "Sources/TokenStatsCLI",
                 swiftSettings: [
                     .enableUpcomingFeature("StrictConcurrency"),
                 ]),
             .testTarget(
-                name: "CodexBarLinuxTests",
-                dependencies: ["CodexBarCore", "CodexBarCLI"],
+                name: "TokenStatsLinuxTests",
+                dependencies: ["TokenStatsCore", "TokenStatsCLI"],
                 path: "TestsLinux",
                 swiftSettings: [
                     .enableUpcomingFeature("StrictConcurrency"),
@@ -71,21 +71,21 @@ let package = Package(
         #if os(macOS)
         targets.append(contentsOf: [
             .executableTarget(
-                name: "CodexBarClaudeWatchdog",
+                name: "TokenStatsClaudeWatchdog",
                 dependencies: [],
-                path: "Sources/CodexBarClaudeWatchdog",
+                path: "Sources/TokenStatsClaudeWatchdog",
                 swiftSettings: [
                     .enableUpcomingFeature("StrictConcurrency"),
                 ]),
             .executableTarget(
-                name: "CodexBar",
+                name: "TokenStats",
                 dependencies: [
                     .product(name: "Sparkle", package: "Sparkle"),
                     .product(name: "KeyboardShortcuts", package: "KeyboardShortcuts"),
-                    "CodexBarMacroSupport",
-                    "CodexBarCore",
+                    "TokenStatsMacroSupport",
+                    "TokenStatsCore",
                 ],
-                path: "Sources/CodexBar",
+                path: "Sources/TokenStats",
                 resources: [
                     .process("Resources"),
                 ],
@@ -95,24 +95,24 @@ let package = Package(
                     .define("ENABLE_SPARKLE"),
                 ]),
             .executableTarget(
-                name: "CodexBarWidget",
-                dependencies: ["CodexBarCore"],
-                path: "Sources/CodexBarWidget",
+                name: "TokenStatsWidget",
+                dependencies: ["TokenStatsCore"],
+                path: "Sources/TokenStatsWidget",
                 swiftSettings: [
                     .enableUpcomingFeature("StrictConcurrency"),
                 ]),
             .executableTarget(
-                name: "CodexBarClaudeWebProbe",
-                dependencies: ["CodexBarCore"],
-                path: "Sources/CodexBarClaudeWebProbe",
+                name: "TokenStatsClaudeWebProbe",
+                dependencies: ["TokenStatsCore"],
+                path: "Sources/TokenStatsClaudeWebProbe",
                 swiftSettings: [
                     .enableUpcomingFeature("StrictConcurrency"),
                 ]),
         ])
 
         targets.append(.testTarget(
-            name: "CodexBarTests",
-            dependencies: ["CodexBar", "CodexBarCore", "CodexBarCLI"],
+            name: "TokenStatsTests",
+            dependencies: ["TokenStats", "TokenStatsCore", "TokenStatsCLI"],
             path: "Tests",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
