@@ -84,7 +84,7 @@ extension UsageStore {
             Task { @MainActor in
                 self.augmentKeepalive?.stop()
                 self.augmentKeepalive = nil
-                print("[CodexBar] Augment session keepalive stopped (provider disabled)")
+                print("[TokenStats] Augment session keepalive stopped (provider disabled)")
             }
         }
         #endif
@@ -565,38 +565,38 @@ final class UsageStore {
 
     private func startAugmentKeepalive() {
         #if os(macOS)
-        print("[CodexBar] 🔍 Checking if Augment keepalive should start...")
-        print("[CodexBar]   - Augment enabled: \(self.isEnabled(.augment))")
-        print("[CodexBar]   - Augment available: \(self.isProviderAvailable(.augment))")
+        print("[TokenStats] 🔍 Checking if Augment keepalive should start...")
+        print("[TokenStats]   - Augment enabled: \(self.isEnabled(.augment))")
+        print("[TokenStats]   - Augment available: \(self.isProviderAvailable(.augment))")
 
         // Only start keepalive if Augment is enabled
         guard self.isEnabled(.augment) else {
-            print("[CodexBar] ⚠️ Augment keepalive NOT started - provider is disabled")
-            print("[CodexBar]   Tip: Enable Augment in Settings to activate automatic session management")
+            print("[TokenStats] ⚠️ Augment keepalive NOT started - provider is disabled")
+            print("[TokenStats]   Tip: Enable Augment in Settings to activate automatic session management")
             return
         }
 
         let logger: (String) -> Void = { message in
-            print("[CodexBar] \(message)")
+            print("[TokenStats] \(message)")
         }
 
         self.augmentKeepalive = AugmentSessionKeepalive(logger: logger)
         self.augmentKeepalive?.start()
-        print("[CodexBar] ✅ Augment session keepalive STARTED successfully")
+        print("[TokenStats] ✅ Augment session keepalive STARTED successfully")
         #endif
     }
 
     /// Force refresh Augment session (called from UI button)
     func forceRefreshAugmentSession() async {
         #if os(macOS)
-        print("[CodexBar] 🔄 Force refresh Augment session requested")
+        print("[TokenStats] 🔄 Force refresh Augment session requested")
         guard let keepalive = self.augmentKeepalive else {
-            print("[CodexBar] ⚠️ Augment keepalive not running - starting it now")
+            print("[TokenStats] ⚠️ Augment keepalive not running - starting it now")
             self.startAugmentKeepalive()
             // Give it a moment to start
             try? await Task.sleep(for: .seconds(1))
             guard let keepalive = self.augmentKeepalive else {
-                print("[CodexBar] ✗ Failed to start Augment keepalive")
+                print("[TokenStats] ✗ Failed to start Augment keepalive")
                 return
             }
             await keepalive.forceRefresh()
@@ -606,7 +606,7 @@ final class UsageStore {
         await keepalive.forceRefresh()
 
         // Refresh usage after forcing session refresh
-        print("[CodexBar] 🔄 Refreshing Augment usage after session refresh")
+        print("[TokenStats] 🔄 Refreshing Augment usage after session refresh")
         await self.refreshProvider(.augment)
         #endif
     }

@@ -196,7 +196,7 @@ actor ClaudeCLISession {
         let proc = Process()
         let resolvedURL = URL(fileURLWithPath: binary)
         if resolvedURL.lastPathComponent == "claude",
-           let watchdog = TTYCommandRunner.locateBundledHelper("CodexBarClaudeWatchdog")
+           let watchdog = TTYCommandRunner.locateBundledHelper("TokenStatsClaudeWatchdog")
         {
             proc.executableURL = URL(fileURLWithPath: watchdog)
             proc.arguments = ["--", binary, "--allowed-tools", ""]

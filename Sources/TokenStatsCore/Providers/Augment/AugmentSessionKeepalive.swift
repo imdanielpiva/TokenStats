@@ -284,7 +284,7 @@ public final class AugmentSessionKeepalive {
         let timestamp = Date().formatted(date: .omitted, time: .standard)
         let fullMessage = "[\(timestamp)] [AugmentKeepalive] \(message)"
         self.logger?(fullMessage)
-        print("[CodexBar] \(fullMessage)")
+        print("[TokenStats] \(fullMessage)")
     }
 }
 

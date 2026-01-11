@@ -227,7 +227,7 @@ public struct TTYCommandRunner {
         let proc = Process()
         let resolvedURL = URL(fileURLWithPath: resolved)
         if resolvedURL.lastPathComponent == "claude",
-           let watchdog = Self.locateBundledHelper("CodexBarClaudeWatchdog")
+           let watchdog = Self.locateBundledHelper("TokenStatsClaudeWatchdog")
         {
             proc.executableURL = URL(fileURLWithPath: watchdog)
             proc.arguments = ["--", resolved] + options.extraArgs

@@ -2,7 +2,7 @@ import TokenStatsCore
 import Foundation
 
 @main
-enum CodexBarClaudeWebProbe {
+enum TokenStatsClaudeWebProbe {
     private static let defaultEndpoints: [String] = [
         "https://claude.ai/api/organizations",
         "https://claude.ai/api/organizations/{orgId}/usage",

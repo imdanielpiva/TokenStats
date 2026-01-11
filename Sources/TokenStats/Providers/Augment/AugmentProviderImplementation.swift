@@ -88,7 +88,7 @@ struct AugmentProviderImplementation: ProviderImplementation {
                 style: .bordered,
                 isVisible: nil,
                 perform: {
-                    print("[CodexBar] Force refresh requested by user")
+                    print("[TokenStats] Force refresh requested by user")
                     await context.store.forceRefreshAugmentSession()
                 }),
             ProviderSettingsActionDescriptor(

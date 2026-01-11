@@ -109,7 +109,7 @@ struct AdvancedPane: View {
                                 .lineLimit(2)
                         }
                     }
-                    Text("Symlink TokenStatsCLI to /usr/local/bin and /opt/homebrew/bin as codexbar.")
+                    Text("Symlink TokenStatsCLI to /usr/local/bin and /opt/homebrew/bin as tokenstats.")
                         .font(.footnote)
                         .foregroundStyle(.tertiary)
                 }
