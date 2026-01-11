@@ -68,8 +68,9 @@ extension CostUsageScanner {
 
             if input == 0, output == 0, cacheRead == 0, cacheCreate == 0, credits == 0 { continue }
 
-            // Amp stores cost directly in USD (pay-as-you-go, no markup)
-            let costNanos = Int((credits * costScale).rounded())
+            // Amp stores cost in cents (pay-as-you-go, no markup) - convert to USD
+            let costUSD = credits / 100.0
+            let costNanos = Int((costUSD * costScale).rounded())
 
             // Use message timestamp if available, otherwise thread created timestamp
             let messageMeta = message["meta"] as? [String: Any]

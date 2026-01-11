@@ -157,9 +157,11 @@ public struct AmpStatusProbe: Sendable {
                         }
 
                         if let credits = usage.credits {
-                            creditsSpentTotal += credits
+                            // Amp stores credits in cents - convert to USD
+                            let usd = credits / 100.0
+                            creditsSpentTotal += usd
                             if isToday {
-                                creditsSpentToday += credits
+                                creditsSpentToday += usd
                             }
                         }
                     }
