@@ -118,7 +118,7 @@ extension StatusItemController {
     @objc func openUsageHistory() {
         DispatchQueue.main.async {
             NSApp.activate(ignoringOtherApps: true)
-            NotificationCenter.default.post(name: .codexbarOpenUsageHistory, object: nil)
+            NotificationCenter.default.post(name: .tokenstatsOpenUsageHistory, object: nil)
         }
     }
 
@@ -138,7 +138,7 @@ extension StatusItemController {
             self.preferencesSelection.tab = tab
             NSApp.activate(ignoringOtherApps: true)
             NotificationCenter.default.post(
-                name: .codexbarOpenSettings,
+                name: .tokenstatsOpenSettings,
                 object: nil,
                 userInfo: ["tab": tab.rawValue])
         }

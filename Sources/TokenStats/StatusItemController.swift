@@ -132,12 +132,12 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.handleDebugReplayNotification(_:)),
-            name: .codexbarDebugReplayAllAnimations,
+            name: .tokenstatsDebugReplayAllAnimations,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.handleDebugBlinkNotification),
-            name: .codexbarDebugBlinkNow,
+            name: .tokenstatsDebugBlinkNow,
             object: nil)
     }
 

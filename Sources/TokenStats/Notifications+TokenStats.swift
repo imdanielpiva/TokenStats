@@ -1,7 +1,7 @@
 import Foundation
 
 extension Notification.Name {
-    static let codexbarOpenSettings = Notification.Name("codexbarOpenSettings")
-    static let codexbarOpenUsageHistory = Notification.Name("codexbarOpenUsageHistory")
-    static let codexbarDebugBlinkNow = Notification.Name("codexbarDebugBlinkNow")
+    static let tokenstatsOpenSettings = Notification.Name("tokenstatsOpenSettings")
+    static let tokenstatsOpenUsageHistory = Notification.Name("tokenstatsOpenUsageHistory")
+    static let tokenstatsDebugBlinkNow = Notification.Name("tokenstatsDebugBlinkNow")
 }

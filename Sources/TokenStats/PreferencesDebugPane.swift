@@ -50,7 +50,7 @@ struct DebugPane: View {
                     .keyboardShortcut(.defaultAction)
 
                     Button {
-                        NotificationCenter.default.post(name: .codexbarDebugBlinkNow, object: nil)
+                        NotificationCenter.default.post(name: .tokenstatsDebugBlinkNow, object: nil)
                     } label: {
                         Label("Blink now", systemImage: "eyes")
                     }
@@ -344,7 +344,7 @@ struct DebugPane: View {
             userInfo["pattern"] = pattern.rawValue
         }
         NotificationCenter.default.post(
-            name: .codexbarDebugReplayAllAnimations,
+            name: .tokenstatsDebugReplayAllAnimations,
             object: nil,
             userInfo: userInfo.isEmpty ? nil : userInfo)
         self.store.replayLoadingAnimation(duration: 4)

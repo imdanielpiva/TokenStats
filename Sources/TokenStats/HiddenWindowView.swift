@@ -7,12 +7,12 @@ struct HiddenWindowView: View {
     var body: some View {
         Color.clear
             .frame(width: 20, height: 20)
-            .onReceive(NotificationCenter.default.publisher(for: .codexbarOpenSettings)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .tokenstatsOpenSettings)) { _ in
                 Task { @MainActor in
                     self.openSettings()
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: .codexbarOpenUsageHistory)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .tokenstatsOpenUsageHistory)) { _ in
                 Task { @MainActor in
                     self.openWindow(id: "usage-history")
                 }
