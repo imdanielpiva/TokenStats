@@ -98,6 +98,22 @@ public struct CostUsageAggregatedReport: Sendable, Equatable {
     }
 }
 
+public struct ModelStreak: Sendable, Equatable, Identifiable {
+    public let modelName: String
+    public let currentStreak: Int
+    public let longestStreak: Int
+    public let lastActiveDate: String?
+
+    public var id: String { self.modelName }
+
+    public init(modelName: String, currentStreak: Int, longestStreak: Int, lastActiveDate: String?) {
+        self.modelName = modelName
+        self.currentStreak = currentStreak
+        self.longestStreak = longestStreak
+        self.lastActiveDate = lastActiveDate
+    }
+}
+
 public enum CostUsageAggregator {
     // MARK: - Main aggregation function
 
@@ -118,6 +134,106 @@ public enum CostUsageAggregator {
         case .year:
             return self.aggregateByYear(daily)
         }
+    }
+
+    // MARK: - Streak calculation
+
+    public static func calculateStreaks(_ daily: [CostUsageDailyReport.Entry]) -> [ModelStreak] {
+        var modelDays: [String: Set<String>] = [:]
+
+        for entry in daily {
+            let models: [String]
+            if let breakdowns = entry.modelBreakdowns {
+                models = breakdowns.map(\.modelName)
+            } else if let used = entry.modelsUsed {
+                models = used
+            } else {
+                continue
+            }
+
+            for model in models {
+                modelDays[model, default: []].insert(entry.date)
+            }
+        }
+
+        let calendar = Calendar.current
+        let todayKey = Self.todayKey()
+
+        var streaks: [ModelStreak] = []
+
+        for (model, days) in modelDays {
+            let sortedDays = days.sorted()
+            guard !sortedDays.isEmpty else { continue }
+
+            var currentStreak = 0
+            var longestStreak = 0
+            var tempStreak = 1
+
+            for i in 1..<sortedDays.count {
+                if Self.areConsecutiveDays(sortedDays[i - 1], sortedDays[i], calendar: calendar) {
+                    tempStreak += 1
+                } else {
+                    longestStreak = max(longestStreak, tempStreak)
+                    tempStreak = 1
+                }
+            }
+            longestStreak = max(longestStreak, tempStreak)
+
+            let lastDay = sortedDays.last!
+            if lastDay == todayKey {
+                currentStreak = 1
+                var idx = sortedDays.count - 2
+                while idx >= 0 {
+                    if Self.areConsecutiveDays(sortedDays[idx], sortedDays[idx + 1], calendar: calendar) {
+                        currentStreak += 1
+                        idx -= 1
+                    } else {
+                        break
+                    }
+                }
+            } else if let yesterday = Self.yesterdayKey(), lastDay == yesterday {
+                currentStreak = 1
+                var idx = sortedDays.count - 2
+                while idx >= 0 {
+                    if Self.areConsecutiveDays(sortedDays[idx], sortedDays[idx + 1], calendar: calendar) {
+                        currentStreak += 1
+                        idx -= 1
+                    } else {
+                        break
+                    }
+                }
+            }
+
+            streaks.append(ModelStreak(
+                modelName: model,
+                currentStreak: currentStreak,
+                longestStreak: longestStreak,
+                lastActiveDate: lastDay))
+        }
+
+        return streaks.sorted { $0.currentStreak > $1.currentStreak }
+    }
+
+    private static func todayKey() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone.current
+        return formatter.string(from: Date())
+    }
+
+    private static func yesterdayKey() -> String? {
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return nil }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone.current
+        return formatter.string(from: yesterday)
+    }
+
+    private static func areConsecutiveDays(_ day1: String, _ day2: String, calendar: Calendar) -> Bool {
+        guard let date1 = Self.parseDate(day1),
+              let date2 = Self.parseDate(day2) else { return false }
+        guard let nextDay = calendar.date(byAdding: .day, value: 1, to: date1) else { return false }
+        return calendar.isDate(nextDay, inSameDayAs: date2)
     }
 
     // MARK: - Model filtering

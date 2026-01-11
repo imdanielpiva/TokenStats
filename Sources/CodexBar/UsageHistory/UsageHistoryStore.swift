@@ -77,6 +77,11 @@ final class UsageHistoryStore {
         return data.allModels
     }
 
+    var modelStreaks: [ModelStreak] {
+        guard let data = self.currentProviderData else { return [] }
+        return CostUsageAggregator.calculateStreaks(data.daily)
+    }
+
     // MARK: - Data loading
 
     func loadData(for provider: UsageHistoryProvider, forceRefresh: Bool = false) async {

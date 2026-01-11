@@ -130,6 +130,7 @@ struct UsageHistoryDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         self.summarySection(report: report)
+                        self.streakSection
                         self.tokenChartSection(report: report)
                         self.costChartSection(report: report)
                     }
@@ -244,6 +245,62 @@ struct UsageHistoryDetailView: View {
                 .font(.title3)
                 .fontWeight(.medium)
         }
+    }
+
+    @ViewBuilder
+    private var streakSection: some View {
+        let streaks = self.store.modelStreaks.filter { $0.currentStreak > 0 || $0.longestStreak > 1 }
+        if !streaks.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Streaks")
+                    .font(.headline)
+
+                LazyVGrid(columns: [
+                    GridItem(.adaptive(minimum: 140, maximum: 200), spacing: 12),
+                ], spacing: 12) {
+                    ForEach(streaks.prefix(6)) { streak in
+                        self.streakCard(streak)
+                    }
+                }
+            }
+            .padding(12)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(8)
+        }
+    }
+
+    private func streakCard(_ streak: ModelStreak) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(UsageFormatter.modelDisplayName(streak.modelName))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+
+            HStack(spacing: 8) {
+                if streak.currentStreak > 0 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "flame.fill")
+                            .foregroundStyle(.orange)
+                        Text("\(streak.currentStreak)d")
+                            .fontWeight(.semibold)
+                    }
+                }
+
+                if streak.longestStreak > streak.currentStreak {
+                    HStack(spacing: 2) {
+                        Image(systemName: "trophy.fill")
+                            .foregroundStyle(.yellow)
+                        Text("\(streak.longestStreak)d")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .font(.callout)
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(nsColor: .windowBackgroundColor))
+        .cornerRadius(6)
     }
 
     private func tokenChartSection(report: CostUsageAggregatedReport) -> some View {
