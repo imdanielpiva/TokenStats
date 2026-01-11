@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 CONF=${1:-release}
-ALLOW_LLDB=${CODEXBAR_ALLOW_LLDB:-0}
-SIGNING_MODE=${CODEXBAR_SIGNING:-}
+ALLOW_LLDB=${TOKENSTATS_ALLOW_LLDB:-0}
+SIGNING_MODE=${TOKENSTATS_SIGNING:-}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 
@@ -108,7 +108,7 @@ for ARCH in "${ARCH_LIST[@]}"; do
   swift build -c "$CONF" --arch "$ARCH"
 done
 
-APP="$ROOT/CodexBar.app"
+APP="$ROOT/TokenStats.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$APP/Contents/Frameworks"
 mkdir -p "$APP/Contents/Helpers" "$APP/Contents/PlugIns"
@@ -121,7 +121,7 @@ if [[ -f "$ICON_SOURCE" ]]; then
 fi
 
 BUNDLE_ID="com.steipete.codexbar"
-FEED_URL="https://raw.githubusercontent.com/steipete/CodexBar/main/appcast.xml"
+FEED_URL="https://raw.githubusercontent.com/steipete/TokenStats/main/appcast.xml"
 AUTO_CHECKS=true
 LOWER_CONF=$(printf "%s" "$CONF" | tr '[:upper:]' '[:lower:]')
 if [[ "$LOWER_CONF" == "debug" ]]; then
@@ -139,11 +139,11 @@ if [[ "$BUNDLE_ID" == *".debug"* ]]; then
   APP_GROUP_ID="group.com.steipete.codexbar.debug"
 fi
 ENTITLEMENTS_DIR="$ROOT/.build/entitlements"
-APP_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBar.entitlements"
-WIDGET_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBarWidget.entitlements"
+APP_ENTITLEMENTS="${ENTITLEMENTS_DIR}/TokenStats.entitlements"
+WIDGET_ENTITLEMENTS="${ENTITLEMENTS_DIR}/TokenStatsWidget.entitlements"
 mkdir -p "$ENTITLEMENTS_DIR"
 if [[ "$ALLOW_LLDB" == "1" && "$LOWER_CONF" != "debug" ]]; then
-  echo "ERROR: CODEXBAR_ALLOW_LLDB requires debug configuration" >&2
+  echo "ERROR: TOKENSTATS_ALLOW_LLDB requires debug configuration" >&2
   exit 1
 fi
 cat > "$APP_ENTITLEMENTS" <<PLIST
@@ -181,10 +181,10 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key><string>CodexBar</string>
-    <key>CFBundleDisplayName</key><string>CodexBar</string>
+    <key>CFBundleName</key><string>TokenStats</string>
+    <key>CFBundleDisplayName</key><string>TokenStats</string>
     <key>CFBundleIdentifier</key><string>${BUNDLE_ID}</string>
-    <key>CFBundleExecutable</key><string>CodexBar</string>
+    <key>CFBundleExecutable</key><string>TokenStats</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>${MARKETING_VERSION}</string>
     <key>CFBundleVersion</key><string>${BUILD_NUMBER}</string>
@@ -195,8 +195,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>SUFeedURL</key><string>${FEED_URL}</string>
     <key>SUPublicEDKey</key><string>AGCY8w5vHirVfGGDGc8Szc5iuOqupZSh9pMj/Qs67XI=</string>
     <key>SUEnableAutomaticChecks</key><${AUTO_CHECKS}/>
-    <key>CodexBuildTimestamp</key><string>${BUILD_TIMESTAMP}</string>
-    <key>CodexGitCommit</key><string>${GIT_COMMIT}</string>
+    <key>TokenStatsBuildTimestamp</key><string>${BUILD_TIMESTAMP}</string>
+    <key>TokenStatsGitCommit</key><string>${GIT_COMMIT}</string>
 </dict>
 </plist>
 PLIST
@@ -252,27 +252,27 @@ install_binary() {
   verify_binary_arches "$dest" "${ARCH_LIST[@]}"
 }
 
-install_binary "CodexBar" "$APP/Contents/MacOS/CodexBar"
-# Ship CodexBarCLI alongside the app for easy symlinking.
-if [[ -f "$(build_product_path "CodexBarCLI" "${ARCH_LIST[0]}")" ]]; then
-  install_binary "CodexBarCLI" "$APP/Contents/Helpers/CodexBarCLI"
+install_binary "TokenStats" "$APP/Contents/MacOS/TokenStats"
+# Ship TokenStatsCLI alongside the app for easy symlinking.
+if [[ -f "$(build_product_path "TokenStatsCLI" "${ARCH_LIST[0]}")" ]]; then
+  install_binary "TokenStatsCLI" "$APP/Contents/Helpers/TokenStatsCLI"
 fi
-# Watchdog helper: ensures `claude` probes die when CodexBar crashes/gets killed.
-if [[ -f "$(build_product_path "CodexBarClaudeWatchdog" "${ARCH_LIST[0]}")" ]]; then
-  install_binary "CodexBarClaudeWatchdog" "$APP/Contents/Helpers/CodexBarClaudeWatchdog"
+# Watchdog helper: ensures `claude` probes die when TokenStats crashes/gets killed.
+if [[ -f "$(build_product_path "TokenStatsClaudeWatchdog" "${ARCH_LIST[0]}")" ]]; then
+  install_binary "TokenStatsClaudeWatchdog" "$APP/Contents/Helpers/TokenStatsClaudeWatchdog"
 fi
-if [[ -f "$(build_product_path "CodexBarWidget" "${ARCH_LIST[0]}")" ]]; then
-  WIDGET_APP="$APP/Contents/PlugIns/CodexBarWidget.appex"
+if [[ -f "$(build_product_path "TokenStatsWidget" "${ARCH_LIST[0]}")" ]]; then
+  WIDGET_APP="$APP/Contents/PlugIns/TokenStatsWidget.appex"
   mkdir -p "$WIDGET_APP/Contents/MacOS" "$WIDGET_APP/Contents/Resources"
   cat > "$WIDGET_APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key><string>CodexBarWidget</string>
-    <key>CFBundleDisplayName</key><string>CodexBar</string>
+    <key>CFBundleName</key><string>TokenStatsWidget</string>
+    <key>CFBundleDisplayName</key><string>TokenStats</string>
     <key>CFBundleIdentifier</key><string>${WIDGET_BUNDLE_ID}</string>
-    <key>CFBundleExecutable</key><string>CodexBarWidget</string>
+    <key>CFBundleExecutable</key><string>TokenStatsWidget</string>
     <key>CFBundlePackageType</key><string>XPC!</string>
     <key>CFBundleShortVersionString</key><string>${MARKETING_VERSION}</string>
     <key>CFBundleVersion</key><string>${BUILD_NUMBER}</string>
@@ -280,18 +280,18 @@ if [[ -f "$(build_product_path "CodexBarWidget" "${ARCH_LIST[0]}")" ]]; then
     <key>NSExtension</key>
     <dict>
         <key>NSExtensionPointIdentifier</key><string>com.apple.widgetkit-extension</string>
-        <key>NSExtensionPrincipalClass</key><string>CodexBarWidget.CodexBarWidgetBundle</string>
+        <key>NSExtensionPrincipalClass</key><string>TokenStatsWidget.TokenStatsWidgetBundle</string>
     </dict>
 </dict>
 </plist>
 PLIST
-  install_binary "CodexBarWidget" "$WIDGET_APP/Contents/MacOS/CodexBarWidget"
+  install_binary "TokenStatsWidget" "$WIDGET_APP/Contents/MacOS/TokenStatsWidget"
 fi
 # Embed Sparkle.framework
 if [[ -d ".build/$CONF/Sparkle.framework" ]]; then
   cp -R ".build/$CONF/Sparkle.framework" "$APP/Contents/Frameworks/"
   chmod -R a+rX "$APP/Contents/Frameworks/Sparkle.framework"
-  install_name_tool -add_rpath "@executable_path/../Frameworks" "$APP/Contents/MacOS/CodexBar"
+  install_name_tool -add_rpath "@executable_path/../Frameworks" "$APP/Contents/MacOS/TokenStats"
   # Re-sign Sparkle and all nested components with Developer ID + timestamp
   SPARKLE="$APP/Contents/Frameworks/Sparkle.framework"
 if [[ "$SIGNING_MODE" == "adhoc" ]]; then
@@ -324,13 +324,13 @@ if [[ -f "$ICON_TARGET" ]]; then
 fi
 
 # Bundle app resources (provider icons, etc.).
-APP_RESOURCES_DIR="$ROOT/Sources/CodexBar/Resources"
+APP_RESOURCES_DIR="$ROOT/Sources/TokenStats/Resources"
 if [[ -d "$APP_RESOURCES_DIR" ]]; then
   cp -R "$APP_RESOURCES_DIR/." "$APP/Contents/Resources/"
 fi
 
 # SwiftPM resource bundles (e.g. KeyboardShortcuts) are emitted next to the built binary.
-PREFERRED_BUILD_DIR="$(dirname "$(build_product_path "CodexBar" "${ARCH_LIST[0]}")")"
+PREFERRED_BUILD_DIR="$(dirname "$(build_product_path "TokenStats" "${ARCH_LIST[0]}")")"
 shopt -s nullglob
 SWIFTPM_BUNDLES=("${PREFERRED_BUILD_DIR}/"*.bundle)
 shopt -u nullglob
@@ -354,21 +354,21 @@ xattr -cr "$APP"
 find "$APP" -name '._*' -delete
 
 # Sign helper binaries if present
-if [[ -f "${APP}/Contents/Helpers/CodexBarCLI" ]]; then
-  codesign "${CODESIGN_ARGS[@]}" "${APP}/Contents/Helpers/CodexBarCLI"
+if [[ -f "${APP}/Contents/Helpers/TokenStatsCLI" ]]; then
+  codesign "${CODESIGN_ARGS[@]}" "${APP}/Contents/Helpers/TokenStatsCLI"
 fi
-if [[ -f "${APP}/Contents/Helpers/CodexBarClaudeWatchdog" ]]; then
-  codesign "${CODESIGN_ARGS[@]}" "${APP}/Contents/Helpers/CodexBarClaudeWatchdog"
+if [[ -f "${APP}/Contents/Helpers/TokenStatsClaudeWatchdog" ]]; then
+  codesign "${CODESIGN_ARGS[@]}" "${APP}/Contents/Helpers/TokenStatsClaudeWatchdog"
 fi
 
 # Sign widget extension if present
-if [[ -d "${APP}/Contents/PlugIns/CodexBarWidget.appex" ]]; then
+if [[ -d "${APP}/Contents/PlugIns/TokenStatsWidget.appex" ]]; then
   codesign "${CODESIGN_ARGS[@]}" \
     --entitlements "$WIDGET_ENTITLEMENTS" \
-    "$APP/Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget"
+    "$APP/Contents/PlugIns/TokenStatsWidget.appex/Contents/MacOS/TokenStatsWidget"
   codesign "${CODESIGN_ARGS[@]}" \
     --entitlements "$WIDGET_ENTITLEMENTS" \
-    "$APP/Contents/PlugIns/CodexBarWidget.appex"
+    "$APP/Contents/PlugIns/TokenStatsWidget.appex"
 fi
 
 # Finally sign the app bundle itself

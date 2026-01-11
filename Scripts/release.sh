@@ -8,8 +8,8 @@ source "$ROOT/version.env"
 source "$HOME/Projects/agent-scripts/release/sparkle_lib.sh"
 
 APPCAST="$ROOT/appcast.xml"
-APP_NAME="CodexBar"
-ARTIFACT_PREFIX="CodexBar-"
+APP_NAME="TokenStats"
+ARTIFACT_PREFIX="TokenStats-"
 BUNDLE_ID="com.steipete.codexbar"
 TAG="v${MARKETING_VERSION}"
 
@@ -33,7 +33,7 @@ probe_sparkle_key "$KEY_FILE"
 
 clear_sparkle_caches "$BUNDLE_ID"
 
-NOTES_FILE=$(mktemp /tmp/codexbar-notes.XXXXXX.md)
+NOTES_FILE=$(mktemp /tmp/tokenstats-notes.XXXXXX.md)
 extract_notes_from_changelog "$MARKETING_VERSION" "$NOTES_FILE"
 trap 'rm -f "$KEY_FILE" "$NOTES_FILE"' EXIT
 

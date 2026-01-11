@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="CodexBar"
+APP_NAME="TokenStats"
 APP_IDENTITY="Developer ID Application: Peter Steinberger (Y5PE65HELJ)"
-APP_BUNDLE="CodexBar.app"
+APP_BUNDLE="TokenStats.app"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 source "$ROOT/version.env"
 ZIP_NAME="${APP_NAME}-${MARKETING_VERSION}.zip"
@@ -40,24 +40,24 @@ ARCHES="${ARCHES_VALUE}" ./Scripts/package_app.sh release
 
 ENTITLEMENTS_DIR="$ROOT/.build/entitlements"
 APP_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBar.entitlements"
-WIDGET_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBarWidget.entitlements"
+WIDGET_ENTITLEMENTS="${ENTITLEMENTS_DIR}/TokenStatsWidget.entitlements"
 
 echo "Signing with $APP_IDENTITY"
-if [[ -f "$APP_BUNDLE/Contents/Helpers/CodexBarCLI" ]]; then
+if [[ -f "$APP_BUNDLE/Contents/Helpers/TokenStatsCLI" ]]; then
   codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
-    "$APP_BUNDLE/Contents/Helpers/CodexBarCLI"
+    "$APP_BUNDLE/Contents/Helpers/TokenStatsCLI"
 fi
-if [[ -f "$APP_BUNDLE/Contents/Helpers/CodexBarClaudeWatchdog" ]]; then
+if [[ -f "$APP_BUNDLE/Contents/Helpers/TokenStatsClaudeWatchdog" ]]; then
   codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
-    "$APP_BUNDLE/Contents/Helpers/CodexBarClaudeWatchdog"
+    "$APP_BUNDLE/Contents/Helpers/TokenStatsClaudeWatchdog"
 fi
-if [[ -d "$APP_BUNDLE/Contents/PlugIns/CodexBarWidget.appex" ]]; then
+if [[ -d "$APP_BUNDLE/Contents/PlugIns/TokenStatsWidget.appex" ]]; then
   codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
     --entitlements "$WIDGET_ENTITLEMENTS" \
-    "$APP_BUNDLE/Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget"
+    "$APP_BUNDLE/Contents/PlugIns/TokenStatsWidget.appex/Contents/MacOS/TokenStatsWidget"
   codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
     --entitlements "$WIDGET_ENTITLEMENTS" \
-    "$APP_BUNDLE/Contents/PlugIns/CodexBarWidget.appex"
+    "$APP_BUNDLE/Contents/PlugIns/TokenStatsWidget.appex"
 fi
 codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
   --entitlements "$APP_ENTITLEMENTS" \
