@@ -17,7 +17,12 @@
 - Usage formatting: fix currency parsing/formatting on non-US locales (e.g., pt-BR). Thanks @mneves75!
 
 ### Preferences & UI
-- Preferences: move “Access OpenAI via web” into Providers → Codex.
+- Usage History: add input vs output tokens stacked bar chart with breakdown percentages.
+- Usage History: add day-of-week usage analysis chart with busiest day highlight.
+- Usage History: add week-over-week comparison cards with change percentages.
+- Usage History: add fun stats/insights section (biggest spend, peak activity, favorite model, weekend warrior badge, etc.).
+- Usage History: add GitHub-style activity calendar heatmap showing last 3 months of daily usage.
+- Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
 - Preferences: add cookie source pickers with contextual helper text for the selected mode.
 - Preferences: tighten provider rows (inline pickers, compact layout, inline refresh + auto-source status).
