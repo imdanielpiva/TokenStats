@@ -1,3 +1,5 @@
+> **Note:** This is a fork of [steipete/CodexBar](https://github.com/steipete/CodexBar).
+
 # CodexBar 🎚️ - May your tokens never run out.
 
 Tiny macOS 14+ menu bar app that keeps your Codex, Claude, Cursor, Gemini, Antigravity, Droid (Factory), Copilot, z.ai, Kiro, Vertex AI, and Augment limits visible (session + weekly where available) and shows when each window resets. One status item per provider (or Merge Icons mode); enable what you use from Settings. No Dock icon, minimal UI, dynamic bar icons in the menu bar.
