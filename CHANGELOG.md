@@ -22,6 +22,9 @@
 - Usage History: add week-over-week comparison cards with change percentages.
 - Usage History: add fun stats/insights section (biggest spend, peak activity, favorite model, weekend warrior badge, etc.).
 - Usage History: add GitHub-style activity calendar heatmap showing last 3 months of daily usage.
+- Usage History: add projected monthly spend with daily average and month-end extrapolation.
+- Usage History: add per-provider monthly budget setting with color-coded progress bar.
+- Usage History: add cumulative spend line chart showing running total over time.
 - Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
 - Preferences: add cookie source pickers with contextual helper text for the selected mode.
