@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
-        <title>CodexBar</title>
+        <title>TokenStats</title>
         <item>
             <title>0.17.0</title>
             <pubDate>Wed, 31 Dec 2025 23:12:24 +0100</pubDate>
