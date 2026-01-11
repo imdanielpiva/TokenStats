@@ -7,7 +7,7 @@ private let minimaxCookieImportOrder: BrowserCookieImportOrder =
     ProviderDefaults.metadata[.minimax]?.browserCookieOrder ?? Browser.defaultImportOrder
 
 public enum MiniMaxCookieImporter {
-    private static let log = CodexBarLog.logger("minimax-cookie")
+    private static let log = TokenStatsLog.logger("minimax-cookie")
     private static let cookieClient = BrowserCookieClient()
     private static let cookieDomains = ["platform.minimax.io", "openplatform.minimax.io", "minimax.io"]
 

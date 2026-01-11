@@ -44,7 +44,7 @@ public enum MiniMaxProviderDescriptor {
 struct MiniMaxCodingPlanFetchStrategy: ProviderFetchStrategy {
     let id: String = "minimax.web"
     let kind: ProviderFetchKind = .web
-    private static let log = CodexBarLog.logger("minimax-web")
+    private static let log = TokenStatsLog.logger("minimax-web")
 
     func isAvailable(_ context: ProviderFetchContext) async -> Bool {
         if Self.resolveCookieOverride(context: context) != nil {

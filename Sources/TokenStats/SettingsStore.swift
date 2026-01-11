@@ -772,7 +772,7 @@ extension SettingsStore {
             }.value
             if let error {
                 // Keep value in memory; persist best-effort.
-                CodexBarLog.logger("zai-token-store").error("Failed to persist z.ai token: \(error)")
+                TokenStatsLog.logger("zai-token-store").error("Failed to persist z.ai token: \(error)")
             }
         }
     }
@@ -798,7 +798,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("codex-cookie-store").error("Failed to persist Codex cookie: \(error)")
+                TokenStatsLog.logger("codex-cookie-store").error("Failed to persist Codex cookie: \(error)")
             }
         }
     }
@@ -824,7 +824,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("claude-cookie-store").error("Failed to persist Claude cookie: \(error)")
+                TokenStatsLog.logger("claude-cookie-store").error("Failed to persist Claude cookie: \(error)")
             }
         }
     }
@@ -850,7 +850,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("cursor-cookie-store").error("Failed to persist Cursor cookie: \(error)")
+                TokenStatsLog.logger("cursor-cookie-store").error("Failed to persist Cursor cookie: \(error)")
             }
         }
     }
@@ -876,7 +876,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("augment-cookie-store").error("Failed to persist Augment cookie: \(error)")
+                TokenStatsLog.logger("augment-cookie-store").error("Failed to persist Augment cookie: \(error)")
             }
         }
     }
@@ -902,7 +902,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("factory-cookie-store").error("Failed to persist Factory cookie: \(error)")
+                TokenStatsLog.logger("factory-cookie-store").error("Failed to persist Factory cookie: \(error)")
             }
         }
     }
@@ -928,7 +928,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("minimax-cookie-store").error("Failed to persist MiniMax cookie: \(error)")
+                TokenStatsLog.logger("minimax-cookie-store").error("Failed to persist MiniMax cookie: \(error)")
             }
         }
     }
@@ -954,7 +954,7 @@ extension SettingsStore {
                 }
             }.value
             if let error {
-                CodexBarLog.logger("copilot-token-store").error("Failed to persist Copilot token: \(error)")
+                TokenStatsLog.logger("copilot-token-store").error("Failed to persist Copilot token: \(error)")
             }
         }
     }

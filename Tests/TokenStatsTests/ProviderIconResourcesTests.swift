@@ -8,7 +8,7 @@ struct ProviderIconResourcesTests {
     @Test
     func providerIconSVGsExist() throws {
         let root = try Self.repoRoot()
-        let resources = root.appending(path: "Sources/CodexBar/Resources", directoryHint: .isDirectory)
+        let resources = root.appending(path: "Sources/TokenStats/Resources", directoryHint: .isDirectory)
 
         let slugs = ["codex", "claude", "zai", "minimax", "cursor", "gemini", "antigravity", "factory", "copilot"]
         for slug in slugs {

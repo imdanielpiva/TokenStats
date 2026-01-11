@@ -116,37 +116,37 @@ struct CompactMetricSelectionIntent: AppIntent, WidgetConfigurationIntent {
     }
 }
 
-struct CodexBarWidgetEntry: TimelineEntry {
+struct TokenStatsWidgetEntry: TimelineEntry {
     let date: Date
     let provider: UsageProvider
     let snapshot: WidgetSnapshot
 }
 
-struct CodexBarCompactEntry: TimelineEntry {
+struct TokenStatsCompactEntry: TimelineEntry {
     let date: Date
     let provider: UsageProvider
     let metric: CompactMetric
     let snapshot: WidgetSnapshot
 }
 
-struct CodexBarSwitcherEntry: TimelineEntry {
+struct TokenStatsSwitcherEntry: TimelineEntry {
     let date: Date
     let provider: UsageProvider
     let availableProviders: [UsageProvider]
     let snapshot: WidgetSnapshot
 }
 
-struct CodexBarTimelineProvider: AppIntentTimelineProvider {
-    func placeholder(in context: Context) -> CodexBarWidgetEntry {
-        CodexBarWidgetEntry(
+struct TokenStatsTimelineProvider: AppIntentTimelineProvider {
+    func placeholder(in context: Context) -> TokenStatsWidgetEntry {
+        TokenStatsWidgetEntry(
             date: Date(),
             provider: .codex,
             snapshot: WidgetPreviewData.snapshot())
     }
 
-    func snapshot(for configuration: ProviderSelectionIntent, in context: Context) async -> CodexBarWidgetEntry {
+    func snapshot(for configuration: ProviderSelectionIntent, in context: Context) async -> TokenStatsWidgetEntry {
         let provider = configuration.provider.provider
-        return CodexBarWidgetEntry(
+        return TokenStatsWidgetEntry(
             date: Date(),
             provider: provider,
             snapshot: WidgetSnapshotStore.load() ?? WidgetPreviewData.snapshot())
@@ -154,38 +154,38 @@ struct CodexBarTimelineProvider: AppIntentTimelineProvider {
 
     func timeline(
         for configuration: ProviderSelectionIntent,
-        in context: Context) async -> Timeline<CodexBarWidgetEntry>
+        in context: Context) async -> Timeline<TokenStatsWidgetEntry>
     {
         let provider = configuration.provider.provider
         let snapshot = WidgetSnapshotStore.load() ?? WidgetPreviewData.snapshot()
-        let entry = CodexBarWidgetEntry(date: Date(), provider: provider, snapshot: snapshot)
+        let entry = TokenStatsWidgetEntry(date: Date(), provider: provider, snapshot: snapshot)
         let refresh = Date().addingTimeInterval(30 * 60)
         return Timeline(entries: [entry], policy: .after(refresh))
     }
 }
 
-struct CodexBarSwitcherTimelineProvider: TimelineProvider {
-    func placeholder(in context: Context) -> CodexBarSwitcherEntry {
+struct TokenStatsSwitcherTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> TokenStatsSwitcherEntry {
         let snapshot = WidgetPreviewData.snapshot()
         let providers = self.availableProviders(from: snapshot)
-        return CodexBarSwitcherEntry(
+        return TokenStatsSwitcherEntry(
             date: Date(),
             provider: providers.first ?? .codex,
             availableProviders: providers,
             snapshot: snapshot)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (CodexBarSwitcherEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping (TokenStatsSwitcherEntry) -> Void) {
         completion(self.makeEntry())
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<CodexBarSwitcherEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<TokenStatsSwitcherEntry>) -> Void) {
         let entry = self.makeEntry()
         let refresh = Date().addingTimeInterval(30 * 60)
         completion(Timeline(entries: [entry], policy: .after(refresh)))
     }
 
-    private func makeEntry() -> CodexBarSwitcherEntry {
+    private func makeEntry() -> TokenStatsSwitcherEntry {
         let snapshot = WidgetSnapshotStore.load() ?? WidgetPreviewData.snapshot()
         let providers = self.availableProviders(from: snapshot)
         let stored = WidgetSelectionStore.loadSelectedProvider()
@@ -193,7 +193,7 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
         if selected != stored {
             WidgetSelectionStore.saveSelectedProvider(selected)
         }
-        return CodexBarSwitcherEntry(
+        return TokenStatsSwitcherEntry(
             date: Date(),
             provider: selected,
             availableProviders: providers,
@@ -207,18 +207,18 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
     }
 }
 
-struct CodexBarCompactTimelineProvider: AppIntentTimelineProvider {
-    func placeholder(in context: Context) -> CodexBarCompactEntry {
-        CodexBarCompactEntry(
+struct TokenStatsCompactTimelineProvider: AppIntentTimelineProvider {
+    func placeholder(in context: Context) -> TokenStatsCompactEntry {
+        TokenStatsCompactEntry(
             date: Date(),
             provider: .codex,
             metric: .credits,
             snapshot: WidgetPreviewData.snapshot())
     }
 
-    func snapshot(for configuration: CompactMetricSelectionIntent, in context: Context) async -> CodexBarCompactEntry {
+    func snapshot(for configuration: CompactMetricSelectionIntent, in context: Context) async -> TokenStatsCompactEntry {
         let provider = configuration.provider.provider
-        return CodexBarCompactEntry(
+        return TokenStatsCompactEntry(
             date: Date(),
             provider: provider,
             metric: configuration.metric,
@@ -227,11 +227,11 @@ struct CodexBarCompactTimelineProvider: AppIntentTimelineProvider {
 
     func timeline(
         for configuration: CompactMetricSelectionIntent,
-        in context: Context) async -> Timeline<CodexBarCompactEntry>
+        in context: Context) async -> Timeline<TokenStatsCompactEntry>
     {
         let provider = configuration.provider.provider
         let snapshot = WidgetSnapshotStore.load() ?? WidgetPreviewData.snapshot()
-        let entry = CodexBarCompactEntry(
+        let entry = TokenStatsCompactEntry(
             date: Date(),
             provider: provider,
             metric: configuration.metric,

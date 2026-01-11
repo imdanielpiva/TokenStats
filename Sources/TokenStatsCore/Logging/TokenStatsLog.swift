@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 
-public enum CodexBarLog {
+public enum TokenStatsLog {
     public enum Destination: Sendable {
         case stderr
         case oslog(subsystem: String)
@@ -73,9 +73,9 @@ public enum CodexBarLog {
         self.isBootstrapped = true
     }
 
-    public static func logger(_ category: String) -> CodexBarLogger {
+    public static func logger(_ category: String) -> TokenStatsLogger {
         let logger = Logger(label: "com.steipete.codexbar.\(category)")
-        return CodexBarLogger { level, message, metadata in
+        return TokenStatsLogger { level, message, metadata in
             let swiftLogLevel = level.asSwiftLogLevel
             let meta = metadata?.reduce(into: Logger.Metadata()) { partial, entry in
                 partial[entry.key] = .string(entry.value)
@@ -90,10 +90,10 @@ public enum CodexBarLog {
     }
 }
 
-public struct CodexBarLogger: Sendable {
-    private let logFn: @Sendable (CodexBarLog.Level, String, [String: String]?) -> Void
+public struct TokenStatsLogger: Sendable {
+    private let logFn: @Sendable (TokenStatsLog.Level, String, [String: String]?) -> Void
 
-    fileprivate init(_ logFn: @escaping @Sendable (CodexBarLog.Level, String, [String: String]?) -> Void) {
+    fileprivate init(_ logFn: @escaping @Sendable (TokenStatsLog.Level, String, [String: String]?) -> Void) {
         self.logFn = logFn
     }
 

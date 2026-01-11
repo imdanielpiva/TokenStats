@@ -8,13 +8,13 @@ import Testing
 struct CLICostTests {
     @Test
     func costJsonShortcutDoesNotEnableJsonLogs() throws {
-        let signature = CodexBarCLI._costSignatureForTesting()
+        let signature = TokenStatsCLI._costSignatureForTesting()
         let parser = CommandParser(signature: signature)
         let parsed = try parser.parse(arguments: ["--json"])
 
         #expect(parsed.flags.contains("jsonShortcut"))
         #expect(!parsed.flags.contains("jsonOutput"))
-        #expect(CodexBarCLI._decodeFormatForTesting(from: parsed) == .json)
+        #expect(TokenStatsCLI._decodeFormatForTesting(from: parsed) == .json)
     }
 
     @Test
@@ -27,7 +27,7 @@ struct CLICostTests {
             daily: [],
             updatedAt: Date(timeIntervalSince1970: 0))
 
-        let output = CodexBarCLI.renderCostText(provider: .claude, snapshot: snap, useColor: false)
+        let output = TokenStatsCLI.renderCostText(provider: .claude, snapshot: snap, useColor: false)
             .replacingOccurrences(of: "\u{00A0}", with: " ")
             .replacingOccurrences(of: "$ ", with: "$")
 

@@ -2,9 +2,9 @@ import TokenStatsCore
 import SwiftUI
 import WidgetKit
 
-struct CodexBarUsageWidgetView: View {
+struct TokenStatsUsageWidgetView: View {
     @Environment(\.widgetFamily) private var family
-    let entry: CodexBarWidgetEntry
+    let entry: TokenStatsWidgetEntry
 
     var body: some View {
         let providerEntry = self.entry.snapshot.entries.first { $0.provider == self.entry.provider }
@@ -44,9 +44,9 @@ struct CodexBarUsageWidgetView: View {
     }
 }
 
-struct CodexBarHistoryWidgetView: View {
+struct TokenStatsHistoryWidgetView: View {
     @Environment(\.widgetFamily) private var family
-    let entry: CodexBarWidgetEntry
+    let entry: TokenStatsWidgetEntry
 
     var body: some View {
         let providerEntry = self.entry.snapshot.entries.first { $0.provider == self.entry.provider }
@@ -74,8 +74,8 @@ struct CodexBarHistoryWidgetView: View {
     }
 }
 
-struct CodexBarCompactWidgetView: View {
-    let entry: CodexBarCompactEntry
+struct TokenStatsCompactWidgetView: View {
+    let entry: TokenStatsCompactEntry
 
     var body: some View {
         let providerEntry = self.entry.snapshot.entries.first { $0.provider == self.entry.provider }
@@ -103,9 +103,9 @@ struct CodexBarCompactWidgetView: View {
     }
 }
 
-struct CodexBarSwitcherWidgetView: View {
+struct TokenStatsSwitcherWidgetView: View {
     @Environment(\.widgetFamily) private var family
-    let entry: CodexBarSwitcherEntry
+    let entry: TokenStatsSwitcherEntry
 
     var body: some View {
         let providerEntry = self.entry.snapshot.entries.first { $0.provider == self.entry.provider }

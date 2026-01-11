@@ -31,7 +31,7 @@ enum SessionQuotaNotificationLogic {
 
 @MainActor
 final class SessionQuotaNotifier {
-    private let logger = CodexBarLog.logger("sessionQuotaNotifications")
+    private let logger = TokenStatsLog.logger("sessionQuotaNotifications")
 
     init() {}
 

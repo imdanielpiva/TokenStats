@@ -2,7 +2,7 @@ import TokenStatsCore
 import Commander
 import Foundation
 
-extension CodexBarCLI {
+extension TokenStatsCLI {
     private static let costSupportedProviders: Set<UsageProvider> = [.claude, .codex]
 
     static func runCost(_ values: ParsedValues) async {
@@ -306,7 +306,7 @@ struct CostTotalsPayload: Encodable {
 }
 
 #if DEBUG
-extension CodexBarCLI {
+extension TokenStatsCLI {
     static func _costSignatureForTesting() -> CommandSignature {
         CommandSignature.describe(CostOptions())
     }

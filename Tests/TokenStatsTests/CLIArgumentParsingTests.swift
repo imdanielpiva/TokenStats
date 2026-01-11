@@ -7,29 +7,29 @@ import Testing
 struct CLIArgumentParsingTests {
     @Test
     func jsonShortcutDoesNotEnableJsonLogs() throws {
-        let signature = CodexBarCLI._usageSignatureForTesting()
+        let signature = TokenStatsCLI._usageSignatureForTesting()
         let parser = CommandParser(signature: signature)
         let parsed = try parser.parse(arguments: ["--json"])
 
         #expect(parsed.flags.contains("jsonShortcut"))
         #expect(!parsed.flags.contains("jsonOutput"))
-        #expect(CodexBarCLI._decodeFormatForTesting(from: parsed) == .json)
+        #expect(TokenStatsCLI._decodeFormatForTesting(from: parsed) == .json)
     }
 
     @Test
     func jsonOutputFlagEnablesJsonLogs() throws {
-        let signature = CodexBarCLI._usageSignatureForTesting()
+        let signature = TokenStatsCLI._usageSignatureForTesting()
         let parser = CommandParser(signature: signature)
         let parsed = try parser.parse(arguments: ["--json-output"])
 
         #expect(parsed.flags.contains("jsonOutput"))
         #expect(!parsed.flags.contains("jsonShortcut"))
-        #expect(CodexBarCLI._decodeFormatForTesting(from: parsed) == .text)
+        #expect(TokenStatsCLI._decodeFormatForTesting(from: parsed) == .text)
     }
 
     @Test
     func logLevelAndVerboseAreParsed() throws {
-        let signature = CodexBarCLI._usageSignatureForTesting()
+        let signature = TokenStatsCLI._usageSignatureForTesting()
         let parser = CommandParser(signature: signature)
         let parsed = try parser.parse(arguments: ["--log-level", "info", "--verbose"])
 
@@ -39,19 +39,19 @@ struct CLIArgumentParsingTests {
 
     @Test
     func resolvedLogLevelDefaultsToError() {
-        #expect(CodexBarCLI.resolvedLogLevel(verbose: false, rawLevel: nil) == .error)
-        #expect(CodexBarCLI.resolvedLogLevel(verbose: true, rawLevel: nil) == .debug)
-        #expect(CodexBarCLI.resolvedLogLevel(verbose: false, rawLevel: "info") == .info)
+        #expect(TokenStatsCLI.resolvedLogLevel(verbose: false, rawLevel: nil) == .error)
+        #expect(TokenStatsCLI.resolvedLogLevel(verbose: true, rawLevel: nil) == .debug)
+        #expect(TokenStatsCLI.resolvedLogLevel(verbose: false, rawLevel: "info") == .info)
     }
 
     @Test
     func formatOptionOverridesJsonShortcut() throws {
-        let signature = CodexBarCLI._usageSignatureForTesting()
+        let signature = TokenStatsCLI._usageSignatureForTesting()
         let parser = CommandParser(signature: signature)
         let parsed = try parser.parse(arguments: ["--json", "--format", "text"])
 
         #expect(parsed.flags.contains("jsonShortcut"))
         #expect(parsed.options["format"] == ["text"])
-        #expect(CodexBarCLI._decodeFormatForTesting(from: parsed) == .text)
+        #expect(TokenStatsCLI._decodeFormatForTesting(from: parsed) == .text)
     }
 }

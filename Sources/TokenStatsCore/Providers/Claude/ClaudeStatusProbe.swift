@@ -46,7 +46,7 @@ public enum ClaudeStatusProbeError: LocalizedError, Sendable {
 public struct ClaudeStatusProbe: Sendable {
     public var claudeBinary: String = "claude"
     public var timeout: TimeInterval = 20.0
-    private static let log = CodexBarLog.logger("claude-probe")
+    private static let log = TokenStatsLog.logger("claude-probe")
 
     public init(claudeBinary: String = "claude", timeout: TimeInterval = 20.0) {
         self.claudeBinary = claudeBinary

@@ -22,7 +22,7 @@ enum MiniMaxCookieStoreError: LocalizedError {
 }
 
 struct KeychainMiniMaxCookieStore: MiniMaxCookieStoring {
-    private static let log = CodexBarLog.logger("minimax-cookie-store")
+    private static let log = TokenStatsLog.logger("minimax-cookie-store")
 
     private let service = "com.steipete.CodexBar"
     private let account = "minimax-cookie"

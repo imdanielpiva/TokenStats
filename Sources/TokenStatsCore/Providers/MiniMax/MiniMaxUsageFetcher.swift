@@ -4,7 +4,7 @@ import FoundationNetworking
 #endif
 
 public struct MiniMaxUsageFetcher: Sendable {
-    private static let log = CodexBarLog.logger("minimax-usage")
+    private static let log = TokenStatsLog.logger("minimax-usage")
     private static let codingPlanURL = URL(
         string: "https://platform.minimax.io/user-center/payment/coding-plan?cycle_type=3")!
     private static let codingPlanRefererURL =

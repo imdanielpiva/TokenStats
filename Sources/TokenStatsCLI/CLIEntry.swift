@@ -14,7 +14,7 @@ import FoundationNetworking
 #endif
 
 @main
-enum CodexBarCLI {
+enum TokenStatsCLI {
     static func main() async {
         let rawArgv = Array(CommandLine.arguments.dropFirst())
         let argv = Self.effectiveArgv(rawArgv)
@@ -217,11 +217,11 @@ enum CodexBarCLI {
         let verbose = values.flags.contains("verbose")
         let rawLevel = values.options["logLevel"]?.last
         let level = Self.resolvedLogLevel(verbose: verbose, rawLevel: rawLevel)
-        CodexBarLog.bootstrapIfNeeded(.init(destination: .stderr, level: level, json: isJSON))
+        TokenStatsLog.bootstrapIfNeeded(.init(destination: .stderr, level: level, json: isJSON))
     }
 
-    static func resolvedLogLevel(verbose: Bool, rawLevel: String?) -> CodexBarLog.Level {
-        CodexBarLog.parseLevel(rawLevel) ?? (verbose ? .debug : .error)
+    static func resolvedLogLevel(verbose: Bool, rawLevel: String?) -> TokenStatsLog.Level {
+        TokenStatsLog.parseLevel(rawLevel) ?? (verbose ? .debug : .error)
     }
 
     static func effectiveArgv(_ argv: [String]) -> [String] {
@@ -718,7 +718,7 @@ enum ProviderSelection: Sendable, ExpressibleFromArgument {
 }
 
 #if DEBUG
-extension CodexBarCLI {
+extension TokenStatsCLI {
     static func _usageSignatureForTesting() -> CommandSignature {
         CommandSignature.describe(UsageOptions())
     }

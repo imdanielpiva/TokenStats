@@ -19,7 +19,7 @@ public struct ProviderTokenResolution: Sendable {
 }
 
 public enum ProviderTokenResolver {
-    private static let log = CodexBarLog.logger("provider-token")
+    private static let log = TokenStatsLog.logger("provider-token")
 
     private static let keychainService = "com.steipete.CodexBar"
     private static let zaiAccount = "zai-api-token"

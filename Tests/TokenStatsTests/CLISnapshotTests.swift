@@ -131,9 +131,9 @@ struct CLISnapshotTests {
 
     @Test
     func defaultsToUsageWhenNoCommandProvided() {
-        #expect(CodexBarCLI.effectiveArgv([]) == ["usage"])
-        #expect(CodexBarCLI.effectiveArgv(["--format", "json"]).first == "usage")
-        #expect(CodexBarCLI.effectiveArgv(["usage", "--format", "json"]).first == "usage")
+        #expect(TokenStatsCLI.effectiveArgv([]) == ["usage"])
+        #expect(TokenStatsCLI.effectiveArgv(["--format", "json"]).first == "usage")
+        #expect(TokenStatsCLI.effectiveArgv(["usage", "--format", "json"]).first == "usage")
     }
 
     @Test
