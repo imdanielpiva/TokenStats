@@ -83,7 +83,7 @@ The provider fetches data from:
 **Solution**:
 1. Open [app.augmentcode.com](https://app.augmentcode.com) in Chrome, Chrome Beta, or Arc
 2. Sign in to your Augment account
-3. Return to CodexBar and click "Refresh" in the menu
+3. Return to TokenStats and click "Refresh" in the menu
 
 ### "Session has expired"
 
@@ -92,7 +92,7 @@ The provider fetches data from:
 **Solution**:
 1. Visit [app.augmentcode.com](https://app.augmentcode.com)
 2. Log out and log back in
-3. Return to CodexBar - it will automatically import fresh cookies
+3. Return to TokenStats - it will automatically import fresh cookies
 
 ### Cookies not importing from Chrome Beta
 
@@ -111,7 +111,7 @@ If automatic import fails, you can manually paste cookies:
 2. Go to **Application → Cookies → https://app.augmentcode.com**
 3. Copy all cookie values
 4. Format as: `cookie1=value1; cookie2=value2; ...`
-5. In CodexBar: **Settings → Providers → Augment → Cookie Source → Manual**
+5. In TokenStats: **Settings → Providers → Augment → Cookie Source → Manual**
 6. Paste the cookie header
 
 ## Debug Mode

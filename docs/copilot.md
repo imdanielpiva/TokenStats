@@ -18,7 +18,7 @@ Copilot uses GitHub OAuth device flow and the Copilot internal usage API. No bro
      - `POST https://github.com/login/oauth/access_token`
    - Scope: `read:user`.
    - Token stored in Keychain:
-     - Service: `com.steipete.CodexBar`
+     - Service: `com.steipete.TokenStats`
      - Account: `copilot-api-token`
 
 2) **Usage fetch**
@@ -38,7 +38,7 @@ Copilot uses GitHub OAuth device flow and the Copilot internal usage API. No bro
 - Plan label from `copilotPlan`.
 
 ## Key files
-- `Sources/CodexBarCore/Providers/Copilot/CopilotUsageFetcher.swift`
-- `Sources/CodexBarCore/Providers/Copilot/CopilotDeviceFlow.swift`
-- `Sources/CodexBar/Providers/Copilot/CopilotLoginFlow.swift`
-- `Sources/CodexBar/CopilotTokenStore.swift`
+- `Sources/TokenStatsCore/Providers/Copilot/CopilotUsageFetcher.swift`
+- `Sources/TokenStatsCore/Providers/Copilot/CopilotDeviceFlow.swift`
+- `Sources/TokenStats/Providers/Copilot/CopilotLoginFlow.swift`
+- `Sources/TokenStats/CopilotTokenStore.swift`

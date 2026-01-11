@@ -65,6 +65,6 @@ MiniMax is web-only. Usage is fetched from the Coding Plan remains API using a s
 - Plan/tier: best-effort from response fields or HTML title.
 
 ## Key files
-- `Sources/CodexBarCore/Providers/MiniMax/MiniMaxUsageFetcher.swift`
-- `Sources/CodexBarCore/Providers/MiniMax/MiniMaxProviderDescriptor.swift`
-- `Sources/CodexBar/Providers/MiniMax/MiniMaxProviderImplementation.swift`
+- `Sources/TokenStatsCore/Providers/MiniMax/MiniMaxUsageFetcher.swift`
+- `Sources/TokenStatsCore/Providers/MiniMax/MiniMaxProviderDescriptor.swift`
+- `Sources/TokenStats/Providers/MiniMax/MiniMaxProviderImplementation.swift`

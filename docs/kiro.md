@@ -16,7 +16,7 @@ Kiro uses the AWS `kiro-cli` tool to fetch usage data. No browser cookies or OAu
    - Command: `kiro-cli chat --no-interactive "/usage"`
    - Timeout: 10 seconds.
    - Requires `kiro-cli` installed and logged in via AWS Builder ID.
-   - Output is ANSI-decorated; CodexBar strips escape sequences before parsing.
+   - Output is ANSI-decorated; TokenStats strips escape sequences before parsing.
 
 ## Output format (example)
 
@@ -51,6 +51,6 @@ Kiro does not have a dedicated status page. The "View Status" link opens the AWS
 
 ## Key files
 
-- `Sources/CodexBarCore/Providers/Kiro/KiroProviderDescriptor.swift`
-- `Sources/CodexBarCore/Providers/Kiro/KiroStatusProbe.swift`
-- `Sources/CodexBar/Providers/Kiro/KiroProviderImplementation.swift`
+- `Sources/TokenStatsCore/Providers/Kiro/KiroProviderDescriptor.swift`
+- `Sources/TokenStatsCore/Providers/Kiro/KiroStatusProbe.swift`
+- `Sources/TokenStats/Providers/Kiro/KiroProviderImplementation.swift`

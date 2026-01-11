@@ -1,6 +1,10 @@
 # Changelog
 
 ## 0.18.0 — Unreleased
+
+### Rename
+- **Project renamed from CodexBar to TokenStats.** Bundle identifiers remain unchanged (`com.steipete.codexbar`) to preserve user settings and keychain data.
+
 ### Providers
 - Vertex AI: add provider with quota-based usage from gcloud ADC. Thanks @bahag-chaurasiak!
 - Vertex AI: token costs are shown via the Claude provider (same local logs).

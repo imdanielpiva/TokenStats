@@ -36,7 +36,7 @@ Created `KeychainMigration.swift` to migrate existing keychain items:
 
 ### 3. Migration Flow
 ```swift
-// In CodexBarApp.init()
+// In TokenStatsApp.init()
 KeychainMigration.migrateIfNeeded()
 
 // Migration logic:
@@ -89,14 +89,14 @@ defaults delete com.steipete.codexbar KeychainMigrationV1Completed
 ## Files Changed
 
 ### New Files
-- `Sources/CodexBar/KeychainMigration.swift` - One-time migration logic
+- `Sources/TokenStats/KeychainMigration.swift` - One-time migration logic
 
 ### Modified Files
-- `Sources/CodexBar/CookieHeaderStore.swift` - Changed accessibility
-- `Sources/CodexBar/MiniMaxCookieStore.swift` - Changed accessibility
-- `Sources/CodexBar/ZaiTokenStore.swift` - Changed accessibility
-- `Sources/CodexBar/CopilotTokenStore.swift` - Changed accessibility
-- `Sources/CodexBar/CodexBarApp.swift` - Added migration call
+- `Sources/TokenStats/CookieHeaderStore.swift` - Changed accessibility
+- `Sources/TokenStats/MiniMaxCookieStore.swift` - Changed accessibility
+- `Sources/TokenStats/ZaiTokenStore.swift` - Changed accessibility
+- `Sources/TokenStats/CopilotTokenStore.swift` - Changed accessibility
+- `Sources/TokenStats/TokenStatsApp.swift` - Added migration call
 
 ## Alternative Approaches Considered
 

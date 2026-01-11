@@ -23,7 +23,7 @@ Cursor is web-only. Usage is fetched via browser cookies or a stored WebKit sess
 2) **Stored session cookies** (fallback)
    - Captured by the "Add Account" WebKit login flow.
    - Login teardown uses `WebKitTeardown` to avoid Intel WebKit crashes.
-   - Stored at: `~/Library/Application Support/CodexBar/cursor-session.json`.
+   - Stored at: `~/Library/Application Support/TokenStats/cursor-session.json`.
 
 Manual option:
 - Preferences → Providers → Cursor → Cookie source → Manual.
@@ -49,5 +49,5 @@ Manual option:
 - Reset: billing cycle end date.
 
 ## Key files
-- `Sources/CodexBarCore/Providers/Cursor/CursorStatusProbe.swift`
-- `Sources/CodexBar/CursorLoginRunner.swift` (login flow)
+- `Sources/TokenStatsCore/Providers/Cursor/CursorStatusProbe.swift`
+- `Sources/TokenStats/CursorLoginRunner.swift` (login flow)

@@ -7,9 +7,9 @@ DerivedData
 
 # Bundles / artifacts
 # Main app bundle (any variation)
-CodexBar.app/
-CodexBar *.app/
-CodexBar_*.app/
+TokenStats.app/
+TokenStats *.app/
+TokenStats_*.app/
 Codexbar.app/
 # Release artifacts
 *.ipa

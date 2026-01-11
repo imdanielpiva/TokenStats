@@ -14,7 +14,7 @@ Factory (displayed as "Droid") is web-based. We authenticate via cookies or Work
 
 Fetch attempts run in this exact order:
 1) **Browser cookies (Safari only)** for Factory domains.
-2) **Stored session** (`~/Library/Application Support/CodexBar/factory-session.json`).
+2) **Stored session** (`~/Library/Application Support/TokenStats/factory-session.json`).
 3) **Stored bearer token** (same session file).
 4) **Stored WorkOS refresh token** (same session file).
 5) **Local storage WorkOS tokens** (Safari + Chrome/Chromium/Arc leveldb).
@@ -94,7 +94,7 @@ Endpoints:
   - Organization ID parsed from JWT when available.
 
 ## Session storage
-- File: `~/Library/Application Support/CodexBar/factory-session.json`
+- File: `~/Library/Application Support/TokenStats/factory-session.json`
 - Stores cookies + bearer token + WorkOS refresh token.
 
 ## Snapshot mapping
@@ -104,5 +104,5 @@ Endpoints:
 - Plan/tier + org name from auth response.
 
 ## Key files
-- `Sources/CodexBarCore/Providers/Factory/FactoryStatusProbe.swift`
-- `Sources/CodexBarCore/Providers/Factory/FactoryLocalStorageImporter.swift`
+- `Sources/TokenStatsCore/Providers/Factory/FactoryStatusProbe.swift`
+- `Sources/TokenStatsCore/Providers/Factory/FactoryLocalStorageImporter.swift`

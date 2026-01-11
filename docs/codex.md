@@ -99,12 +99,12 @@ Usage source picker:
   - Parses `event_msg` token_count entries and `turn_context` model markers.
   - Computes input/cached/output token deltas and per-model cost.
 - Cache:
-  - `~/Library/Caches/CodexBar/cost-usage/codex-v1.json`
+  - `~/Library/Caches/TokenStats/cost-usage/codex-v1.json`
 - Window: last 30 days (rolling), with a 60s minimum refresh interval.
 
 ## Key files
-- Web: `Sources/CodexBarCore/OpenAIWeb/*`
-- CLI RPC + PTY: `Sources/CodexBarCore/UsageFetcher.swift`,
-  `Sources/CodexBarCore/Providers/Codex/CodexStatusProbe.swift`
-- Cost usage: `Sources/CodexBarCore/CostUsageFetcher.swift`,
-  `Sources/CodexBarCore/Vendored/CostUsage/*`
+- Web: `Sources/TokenStatsCore/OpenAIWeb/*`
+- CLI RPC + PTY: `Sources/TokenStatsCore/UsageFetcher.swift`,
+  `Sources/TokenStatsCore/Providers/Codex/CodexStatusProbe.swift`
+- Cost usage: `Sources/TokenStatsCore/CostUsageFetcher.swift`,
+  `Sources/TokenStatsCore/Vendored/CostUsage/*`

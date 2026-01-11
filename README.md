@@ -1,10 +1,10 @@
-> **Note:** This is a fork of [steipete/CodexBar](https://github.com/steipete/CodexBar).
+> **Note:** This is a fork of [steipete/TokenStats](https://github.com/steipete/TokenStats).
 
-# CodexBar 🎚️ - May your tokens never run out.
+# TokenStats 🎚️ - May your tokens never run out.
 
 Tiny macOS 14+ menu bar app that keeps your Codex, Claude, Cursor, Gemini, Antigravity, Droid (Factory), Copilot, z.ai, Kiro, Vertex AI, and Augment limits visible (session + weekly where available) and shows when each window resets. One status item per provider (or Merge Icons mode); enable what you use from Settings. No Dock icon, minimal UI, dynamic bar icons in the menu bar.
 
-<img src="codexbar.png" alt="CodexBar menu screenshot" width="520" />
+<img src="tokenstats.png" alt="TokenStats menu screenshot" width="520" />
 
 ## Install
 
@@ -12,18 +12,18 @@ Tiny macOS 14+ menu bar app that keeps your Codex, Claude, Cursor, Gemini, Antig
 - macOS 14+ (Sonoma)
 
 ### GitHub Releases
-Download: <https://github.com/steipete/CodexBar/releases>
+Download: <https://github.com/steipete/TokenStats/releases>
 
 ### Homebrew
 ```bash
-brew install --cask steipete/tap/codexbar
+brew install --cask steipete/tap/tokenstats
 ```
 
 ### Linux (CLI only)
 ```bash
-brew install steipete/tap/codexbar
+brew install steipete/tap/tokenstats
 ```
-Or download `CodexBarCLI-v<tag>-linux-<arch>.tar.gz` from GitHub Releases.
+Or download `TokenStatsCLI-v<tag>-linux-<arch>.tar.gz` from GitHub Releases.
 
 ### First run
 - Open Settings → Providers and enable what you use.
@@ -59,12 +59,12 @@ The menu bar icon is a tiny two-bar meter:
 - Provider status polling with incident badges in the menu and icon overlay.
 - Merge Icons mode to combine providers into one status item + switcher.
 - Refresh cadence presets (manual, 1m, 2m, 5m, 15m).
-- Bundled CLI (`codexbar`) for scripts and CI (including `codexbar cost --provider codex|claude` for local cost usage); Linux CLI builds available.
+- Bundled CLI (`tokenstats`) for scripts and CI (including `tokenstats cost --provider codex|claude` for local cost usage); Linux CLI builds available.
 - WidgetKit widget mirrors the menu card snapshot.
 - Privacy-first: on-device parsing by default; browser cookies are opt-in and reused (no passwords stored).
 
 ## Privacy note
-Wondering if CodexBar scans your disk? It doesn’t crawl your filesystem; it reads a small set of known locations (browser cookies/local storage, local JSONL logs) when the related features are enabled. See the discussion and audit notes in [issue #12](https://github.com/steipete/CodexBar/issues/12).
+Wondering if TokenStats scans your disk? It doesn’t crawl your filesystem; it reads a small set of known locations (browser cookies/local storage, local JSONL logs) when the related features are enabled. See the discussion and audit notes in [issue #12](https://github.com/steipete/TokenStats/issues/12).
 
 ## macOS permissions (why they’re needed)
 - **Full Disk Access (optional)**: only required to read Safari cookies/local storage for web-based providers (Codex web, Claude web, Cursor, Droid/Factory). If you don’t grant it, use Chrome/Firefox cookies or CLI-only sources instead.
@@ -72,7 +72,7 @@ Wondering if CodexBar scans your disk? It doesn’t crawl your filesystem; it re
   - Chrome cookie import needs the “Chrome Safe Storage” key to decrypt cookies.
   - Claude OAuth credentials (written by the Claude CLI) are read from Keychain when present.
   - z.ai API token is stored in Keychain from Preferences → Providers; Copilot stores its API token in Keychain during device flow.
-- **Files & Folders prompts (folder/volume access)**: CodexBar launches provider CLIs (codex/claude/gemini/antigravity). If those CLIs read a project directory or external drive, macOS may ask CodexBar for that folder/volume (e.g., Desktop or an external volume). This is driven by the CLI’s working directory, not background disk scanning.
+- **Files & Folders prompts (folder/volume access)**: TokenStats launches provider CLIs (codex/claude/gemini/antigravity). If those CLIs read a project directory or external drive, macOS may ask TokenStats for that folder/volume (e.g., Desktop or an external volume). This is driven by the CLI’s working directory, not background disk scanning.
 - **What we do not request**: no Screen Recording, Accessibility, or Automation permissions; no passwords are stored (browser cookies are reused when you opt in).
 
 ## Docs
@@ -95,9 +95,9 @@ Wondering if CodexBar scans your disk? It doesn’t crawl your filesystem; it re
 ## Build from source
 ```bash
 swift build -c release          # or debug for development
-./Scripts/package_app.sh        # builds CodexBar.app in-place
+./Scripts/package_app.sh        # builds TokenStats.app in-place
 CODEXBAR_SIGNING=adhoc ./Scripts/package_app.sh  # ad-hoc signing (no Apple Developer account)
-open CodexBar.app
+open TokenStats.app
 ```
 
 Dev loop:

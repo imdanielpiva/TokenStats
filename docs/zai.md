@@ -14,7 +14,7 @@ z.ai is API-token based. No browser cookies.
 2) Environment variable `Z_AI_API_KEY`.
 
 ### Keychain location
-- Service: `com.steipete.CodexBar`
+- Service: `com.steipete.TokenStats`
 - Account: `zai-api-token`
 
 ## API endpoint
@@ -38,6 +38,6 @@ z.ai is API-token based. No browser cookies.
   - `usageDetails[]` per model (MCP usage list).
 
 ## Key files
-- `Sources/CodexBarCore/Providers/Zai/ZaiUsageStats.swift`
-- `Sources/CodexBarCore/Providers/Zai/ZaiSettingsReader.swift`
-- `Sources/CodexBar/ZaiTokenStore.swift`
+- `Sources/TokenStatsCore/Providers/Zai/ZaiUsageStats.swift`
+- `Sources/TokenStatsCore/Providers/Zai/ZaiSettingsReader.swift`
+- `Sources/TokenStats/ZaiTokenStore.swift`

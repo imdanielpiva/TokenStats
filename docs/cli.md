@@ -1,41 +1,41 @@
 ---
-summary: "CodexBar CLI for fetching usage from the command line."
+summary: "TokenStats CLI for fetching usage from the command line."
 read_when:
-  - "You want to call CodexBar data from scripts or a terminal."
+  - "You want to call TokenStats data from scripts or a terminal."
   - "Adding or modifying Commander-based CLI commands."
   - "Aligning menubar and CLI output/behavior."
 ---
 
-# CodexBar CLI
+# TokenStats CLI
 
 A lightweight Commander-based CLI that mirrors the menubar app’s data paths (Codex web/RPC → PTY fallback; Claude web by default with CLI fallback and OAuth debug).
 Use it when you need usage numbers in scripts, CI, or dashboards without UI.
 
 ## Install
-- In the app: **Preferences → Advanced → Install CLI**. This symlinks `CodexBarCLI` to `/usr/local/bin/codexbar` and `/opt/homebrew/bin/codexbar`.
-- From the repo: `./bin/install-codexbar-cli.sh` (same symlink targets).
-- Manual: `ln -sf "/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI" /usr/local/bin/codexbar`.
+- In the app: **Preferences → Advanced → Install CLI**. This symlinks `TokenStatsCLI` to `/usr/local/bin/tokenstats` and `/opt/homebrew/bin/tokenstats`.
+- From the repo: `./bin/install-tokenstats-cli.sh` (same symlink targets).
+- Manual: `ln -sf "/Applications/TokenStats.app/Contents/Helpers/TokenStatsCLI" /usr/local/bin/tokenstats`.
 
 ### Linux install
-- Homebrew (Linuxbrew, Linux only): `brew install steipete/tap/codexbar`.
-- Download `CodexBarCLI-v<tag>-linux-<arch>.tar.gz` from GitHub Releases (x86_64 + aarch64).
-- Extract; run `./codexbar` (symlink) or `./CodexBarCLI`.
+- Homebrew (Linuxbrew, Linux only): `brew install steipete/tap/tokenstats`.
+- Download `TokenStatsCLI-v<tag>-linux-<arch>.tar.gz` from GitHub Releases (x86_64 + aarch64).
+- Extract; run `./tokenstats` (symlink) or `./TokenStatsCLI`.
 
 ```
-tar -xzf CodexBarCLI-v0.17.0-linux-x86_64.tar.gz
-./codexbar --version
-./codexbar usage --format json --pretty
+tar -xzf TokenStatsCLI-v0.17.0-linux-x86_64.tar.gz
+./tokenstats --version
+./tokenstats usage --format json --pretty
 ```
 
 ## Build
-- `./Scripts/package_app.sh` (or `./Scripts/compile_and_run.sh`) bundles `CodexBarCLI` into `CodexBar.app/Contents/Helpers/CodexBarCLI`.
-- Standalone: `swift build -c release --product CodexBarCLI` (binary at `./.build/release/CodexBarCLI`).
+- `./Scripts/package_app.sh` (or `./Scripts/compile_and_run.sh`) bundles `TokenStatsCLI` into `TokenStats.app/Contents/Helpers/TokenStatsCLI`.
+- Standalone: `swift build -c release --product TokenStatsCLI` (binary at `./.build/release/TokenStatsCLI`).
 - Dependencies: Swift 6.2+, Commander package (`https://github.com/steipete/Commander`).
 
 ## Command
-- `codexbar` defaults to the `usage` command.
+- `tokenstats` defaults to the `usage` command.
   - `--format text|json` (default: text).
-- `codexbar cost` prints local token cost usage (Claude + Codex) without web/CLI access.
+- `tokenstats cost` prints local token cost usage (Claude + Codex) without web/CLI access.
   - `--format text|json` (default: text).
   - `--refresh` ignores cached scans.
 - `--provider codex|claude|zai|gemini|antigravity|cursor|factory|copilot|both|all` (default: your in-app toggles; falls back to Codex).
@@ -57,7 +57,7 @@ tar -xzf CodexBarCLI-v0.17.0-linux-x86_64.tar.gz
 - Global flags: `-h/--help`, `-V/--version`, `-v/--verbose`, `--no-color`, `--log-level <trace|verbose|debug|info|warning|error|critical>`, `--json-output`.
 
 ### Cost JSON payload
-`codexbar cost --format json` emits an array of payloads (one per provider).
+`tokenstats cost --format json` emits an array of payloads (one per provider).
 - `provider`, `source`, `updatedAt`
 - `sessionTokens`, `sessionCostUSD`
 - `last30DaysTokens`, `last30DaysCostUSD`
@@ -66,16 +66,16 @@ tar -xzf CodexBarCLI-v0.17.0-linux-x86_64.tar.gz
 
 ## Example usage
 ```
-codexbar                          # text, respects app toggles
-codexbar --provider claude        # force Claude
-codexbar --provider all           # query all providers (honors your logins/toggles)
-codexbar --format json --pretty   # machine output
-codexbar --format json --provider both
-codexbar cost                     # local cost usage (last 30 days + today)
-codexbar cost --provider claude --format json --pretty
-COPILOT_API_TOKEN=... codexbar --provider copilot --format json --pretty
-codexbar --status                 # include status page indicator/description
-codexbar --provider codex --source web --format json --pretty
+tokenstats                          # text, respects app toggles
+tokenstats --provider claude        # force Claude
+tokenstats --provider all           # query all providers (honors your logins/toggles)
+tokenstats --format json --pretty   # machine output
+tokenstats --format json --provider both
+tokenstats cost                     # local cost usage (last 30 days + today)
+tokenstats cost --provider claude --format json --pretty
+COPILOT_API_TOKEN=... tokenstats --provider copilot --format json --pretty
+tokenstats --status                 # include status page indicator/description
+tokenstats --provider codex --source web --format json --pretty
 ```
 
 ### Sample output (text)
@@ -152,7 +152,7 @@ Plan: Pro
 - Text output uses ANSI colors when stdout is a rich TTY; disable with `--no-color` or `NO_COLOR`/`TERM=dumb`.
 - Copilot CLI queries require `COPILOT_API_TOKEN` (GitHub OAuth token).
 - Prefer Codex RPC first, then PTY fallback; Claude defaults to web with CLI fallback when cookies are missing.
-- OpenAI web requires a signed-in `chatgpt.com` session in Safari, Chrome, or Firefox. No passwords are stored; CodexBar reuses cookies.
-- Safari cookie import may require granting CodexBar Full Disk Access (System Settings → Privacy & Security → Full Disk Access).
+- OpenAI web requires a signed-in `chatgpt.com` session in Safari, Chrome, or Firefox. No passwords are stored; TokenStats reuses cookies.
+- Safari cookie import may require granting TokenStats Full Disk Access (System Settings → Privacy & Security → Full Disk Access).
 - The `openaiDashboard` JSON field is normally sourced from the app’s cached dashboard snapshot; `--source auto|web` refreshes it live via WebKit using a per-account cookie store.
 - Future: optional `--from-cache` flag to read the menubar app’s persisted snapshot (if/when that file lands).

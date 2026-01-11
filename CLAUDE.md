@@ -34,16 +34,16 @@ swiftlint --strict
 
 ### Module Structure
 
-- **CodexBarCore**: Fetch + parse logic (provider probes, RPC, PTY runners, web scraping, status polling). Shared by app, CLI, and widget.
-- **CodexBar**: SwiftUI/AppKit menu bar app (UsageStore, SettingsStore, StatusItemController, icon rendering, preferences UI).
-- **CodexBarCLI**: Bundled CLI (`codexbar`) for scripting and CI usage/status output.
-- **CodexBarWidget**: WidgetKit extension wired to shared snapshot.
-- **CodexBarMacros** / **CodexBarMacroSupport**: SwiftSyntax macros for provider registration.
-- **CodexBarClaudeWatchdog**: Helper process for stable Claude CLI PTY sessions.
+- **TokenStatsCore**: Fetch + parse logic (provider probes, RPC, PTY runners, web scraping, status polling). Shared by app, CLI, and widget.
+- **TokenStats**: SwiftUI/AppKit menu bar app (UsageStore, SettingsStore, StatusItemController, icon rendering, preferences UI).
+- **TokenStatsCLI**: Bundled CLI (`tokenstats`) for scripting and CI usage/status output.
+- **TokenStatsWidget**: WidgetKit extension wired to shared snapshot.
+- **TokenStatsMacros** / **TokenStatsMacroSupport**: SwiftSyntax macros for provider registration.
+- **TokenStatsClaudeWatchdog**: Helper process for stable Claude CLI PTY sessions.
 
 ### Entry Points
 
-- `CodexBarApp.swift`: SwiftUI app with keepalive + Settings scene.
+- `TokenStatsApp.swift`: SwiftUI app with keepalive + Settings scene.
 - `AppDelegate`: Wires StatusItemController, Sparkle updater, notifications.
 
 ### Data Flow
@@ -53,11 +53,11 @@ Settings toggles feed `SettingsStore` → `UsageStore` refresh cadence + feature
 
 ### Provider Pattern
 
-Providers live in `Sources/CodexBar/Providers/<ProviderName>/`:
+Providers live in `Sources/TokenStats/Providers/<ProviderName>/`:
 - `*ProviderImplementation.swift`: Implements `ProviderImplementation` protocol
 - `*LoginFlow.swift`: Optional auth flow UI
 
-Provider core logic (fetchers, parsers) lives in `Sources/CodexBarCore/Providers/`.
+Provider core logic (fetchers, parsers) lives in `Sources/TokenStatsCore/Providers/`.
 
 ## Code Style
 
@@ -70,7 +70,7 @@ Provider core logic (fetchers, parsers) lives in `Sources/CodexBarCore/Providers
 
 ## Testing
 
-- Tests in `Tests/CodexBarTests/*Tests.swift` follow `FeatureNameTests` naming with `test_caseDescription` methods.
+- Tests in `Tests/TokenStatsTests/*Tests.swift` follow `FeatureNameTests` naming with `test_caseDescription` methods.
 - Add fixtures for new parsing/formatting scenarios.
 - Always run `swift test` before handoff.
 

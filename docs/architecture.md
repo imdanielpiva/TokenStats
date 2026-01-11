@@ -8,17 +8,17 @@ read_when:
 # Architecture overview
 
 ## Modules
-- `Sources/CodexBarCore`: fetch + parse (Codex RPC, PTY runner, Claude probes, OpenAI web scraping, status polling).
-- `Sources/CodexBar`: state + UI (UsageStore, SettingsStore, StatusItemController, menus, icon rendering).
-- `Sources/CodexBarWidget`: WidgetKit extension wired to the shared snapshot.
-- `Sources/CodexBarCLI`: bundled CLI for `codexbar` usage/status output.
-- `Sources/CodexBarMacros`: SwiftSyntax macros for provider registration.
-- `Sources/CodexBarMacroSupport`: shared macro support used by app/core/CLI targets.
-- `Sources/CodexBarClaudeWatchdog`: helper process for stable Claude CLI PTY sessions.
-- `Sources/CodexBarClaudeWebProbe`: CLI helper to diagnose Claude web fetches.
+- `Sources/TokenStatsCore`: fetch + parse (Codex RPC, PTY runner, Claude probes, OpenAI web scraping, status polling).
+- `Sources/TokenStats`: state + UI (UsageStore, SettingsStore, StatusItemController, menus, icon rendering).
+- `Sources/TokenStatsWidget`: WidgetKit extension wired to the shared snapshot.
+- `Sources/TokenStatsCLI`: bundled CLI for `tokenstats` usage/status output.
+- `Sources/TokenStatsMacros`: SwiftSyntax macros for provider registration.
+- `Sources/TokenStatsMacroSupport`: shared macro support used by app/core/CLI targets.
+- `Sources/TokenStatsClaudeWatchdog`: helper process for stable Claude CLI PTY sessions.
+- `Sources/TokenStatsClaudeWebProbe`: CLI helper to diagnose Claude web fetches.
 
 ## Entry points
-- `CodexBarApp`: SwiftUI keepalive + Settings scene.
+- `TokenStatsApp`: SwiftUI keepalive + Settings scene.
 - `AppDelegate`: wires status controller, Sparkle updater, notifications.
 
 ## Data flow

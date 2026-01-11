@@ -1,8 +1,8 @@
-# CodexBar Fork - Quick Start Guide
+# TokenStats Fork - Quick Start Guide
 
 **Fork Maintainer:** Brandon Charleson ([topoffunnel.com](https://topoffunnel.com))  
 **Original Author:** Peter Steinberger ([steipete](https://twitter.com/steipete))  
-**Fork Repository:** https://github.com/topoffunnel/CodexBar
+**Fork Repository:** https://github.com/topoffunnel/TokenStats
 
 ---
 
@@ -43,8 +43,8 @@ swiftlint --strict
 ./Scripts/package_app.sh
 
 # Restart app after rebuild
-pkill -x CodexBar || pkill -f CodexBar.app || true
-cd /Users/steipete/Projects/codexbar && open -n /Users/steipete/Projects/codexbar/CodexBar.app
+pkill -x TokenStats || pkill -f TokenStats.app || true
+cd /Users/steipete/Projects/tokenstats && open -n /Users/steipete/Projects/tokenstats/TokenStats.app
 ```
 
 ### Release
@@ -82,10 +82,10 @@ git push origin feature/my-feature
 ## 📁 Key Files & Directories
 
 ### Source Code
-- `Sources/CodexBar/` - Swift 6 menu bar app
-- `Sources/CodexBarCore/` - Core logic, providers, utilities
-- `Sources/CodexBarCore/Providers/Augment/` - Augment provider implementation
-- `Tests/CodexBarTests/` - XCTest coverage
+- `Sources/TokenStats/` - Swift 6 menu bar app
+- `Sources/TokenStatsCore/` - Core logic, providers, utilities
+- `Sources/TokenStatsCore/Providers/Augment/` - Augment provider implementation
+- `Tests/TokenStatsTests/` - XCTest coverage
 
 ### Scripts
 - `Scripts/compile_and_run.sh` - Main development script
@@ -144,7 +144,7 @@ swift test --filter AugmentTests
 ### App Won't Launch
 ```bash
 # Kill all instances
-pkill -x CodexBar || pkill -f CodexBar.app || true
+pkill -x TokenStats || pkill -f TokenStats.app || true
 
 # Rebuild and relaunch
 ./Scripts/compile_and_run.sh
@@ -169,7 +169,7 @@ swiftlint --strict
 
 ### Keychain Permission Prompts
 - This fork includes fixes to eliminate prompts
-- If you still see prompts, check `Sources/CodexBarCore/Keychain/`
+- If you still see prompts, check `Sources/TokenStatsCore/Keychain/`
 - Ensure you're running the latest build
 
 ---
@@ -177,9 +177,9 @@ swiftlint --strict
 ## 📚 Learning Resources
 
 ### Understanding the Codebase
-1. Start with `Sources/CodexBar/CodexbarApp.swift` - App entry point
-2. Review `Sources/CodexBarCore/UsageStore.swift` - Main state management
-3. Check `Sources/CodexBarCore/Providers/` - Provider implementations
+1. Start with `Sources/TokenStats/CodexbarApp.swift` - App entry point
+2. Review `Sources/TokenStatsCore/UsageStore.swift` - Main state management
+3. Check `Sources/TokenStatsCore/Providers/` - Provider implementations
 4. Read `docs/provider.md` - Provider authoring guide
 
 ### Swift 6 & SwiftUI
@@ -203,11 +203,11 @@ swiftlint --strict
 1. Fork the fork repository
 2. Create feature branch
 3. Make changes with tests
-4. Submit PR to `topoffunnel/CodexBar`
+4. Submit PR to `topoffunnel/TokenStats`
 
 ### To Upstream
 1. Check if feature benefits all users
-2. Create PR to `steipete/CodexBar`
+2. Create PR to `steipete/TokenStats`
 3. Reference this fork if relevant
 4. Be patient with review process
 
@@ -218,11 +218,11 @@ See `docs/FORK_ROADMAP.md` for contribution strategy.
 ## 📞 Support
 
 ### Fork-Specific Issues
-- GitHub Issues: https://github.com/topoffunnel/CodexBar/issues
+- GitHub Issues: https://github.com/topoffunnel/TokenStats/issues
 - Email: [your-email]@topoffunnel.com
 
 ### Upstream Issues
-- GitHub Issues: https://github.com/steipete/CodexBar/issues
+- GitHub Issues: https://github.com/steipete/TokenStats/issues
 - Twitter: [@steipete](https://twitter.com/steipete)
 
 ---

@@ -1,41 +1,41 @@
 ---
-summary: "Homebrew Cask release steps for CodexBar (Sparkle-disabled builds)."
+summary: "Homebrew Cask release steps for TokenStats (Sparkle-disabled builds)."
 read_when:
-  - Publishing a CodexBar release via Homebrew
+  - Publishing a TokenStats release via Homebrew
   - Updating the Homebrew tap cask definition
 ---
 
-# CodexBar Homebrew Release Playbook
+# TokenStats Homebrew Release Playbook
 
-Homebrew is for the UI app via Cask. When installed via Homebrew, CodexBar disables Sparkle and shows a "update via brew" hint in About.
+Homebrew is for the UI app via Cask. When installed via Homebrew, TokenStats disables Sparkle and shows a "update via brew" hint in About.
 
 ## Prereqs
 - Homebrew installed.
 - Access to the tap repo: `../homebrew-tap`.
 
-## 1) Release CodexBar normally
-Follow `docs/RELEASING.md` to publish `CodexBar-<version>.zip` to GitHub Releases.
+## 1) Release TokenStats normally
+Follow `docs/RELEASING.md` to publish `TokenStats-<version>.zip` to GitHub Releases.
 
 ## 2) Update the Homebrew tap cask
-In `../homebrew-tap`, add/update the cask at `Casks/codexbar.rb`:
-- `url` points at the GitHub release asset: `.../releases/download/v<version>/CodexBar-<version>.zip`
+In `../homebrew-tap`, add/update the cask at `Casks/tokenstats.rb`:
+- `url` points at the GitHub release asset: `.../releases/download/v<version>/TokenStats-<version>.zip`
 - Update `sha256` to match that zip.
-- Keep `depends_on arch: :arm64` and `depends_on macos: ">= :sonoma"` (CodexBar is macOS 14+).
+- Keep `depends_on arch: :arm64` and `depends_on macos: ">= :sonoma"` (TokenStats is macOS 14+).
 
 ## 2b) Update the Homebrew tap formula (Linux CLI)
-In `../homebrew-tap`, add/update the formula at `Formula/codexbar.rb`:
+In `../homebrew-tap`, add/update the formula at `Formula/tokenstats.rb`:
 - `url` points at the GitHub release assets:
-  - `.../releases/download/v<version>/CodexBarCLI-v<version>-linux-aarch64.tar.gz`
-  - `.../releases/download/v<version>/CodexBarCLI-v<version>-linux-x86_64.tar.gz`
+  - `.../releases/download/v<version>/TokenStatsCLI-v<version>-linux-aarch64.tar.gz`
+  - `.../releases/download/v<version>/TokenStatsCLI-v<version>-linux-x86_64.tar.gz`
 - Update both `sha256` values to match those tarballs.
 
 ## 3) Verify install
 ```sh
-brew uninstall --cask codexbar || true
+brew uninstall --cask tokenstats || true
 brew untap steipete/tap || true
 brew tap steipete/tap
-brew install --cask steipete/tap/codexbar
-open -a CodexBar
+brew install --cask steipete/tap/tokenstats
+open -a TokenStats
 ```
 
 ## 4) Push tap changes
