@@ -75,6 +75,11 @@ struct MenuDescriptor {
                 sections.append(accountSection)
             }
         case nil:
+            // Add combined usage summary when 2+ providers have cost data
+            if let combinedSection = Self.combinedUsageSection(store: store, settings: settings) {
+                sections.append(combinedSection)
+            }
+
             var addedUsage = false
 
             for enabledProvider in store.enabledProviders() {
@@ -242,6 +247,34 @@ struct MenuDescriptor {
             }
         }
         return nil
+    }
+
+    private static func combinedUsageSection(
+        store: UsageStore,
+        settings: SettingsStore) -> Section?
+    {
+        guard settings.costUsageEnabled else { return nil }
+        guard let combined = store.combinedTokenSnapshot else { return nil }
+
+        var entries: [Entry] = []
+        entries.append(.text("All Providers", .headline))
+
+        if let sessionCost = combined.sessionCostUSD {
+            entries.append(.text("Today: \(UsageFormatter.usdString(sessionCost))", .primary))
+        }
+        if let totalCost = combined.last30DaysCostUSD {
+            entries.append(.text("30 Days: \(UsageFormatter.usdString(totalCost))", .primary))
+        }
+
+        if let sessionTokens = combined.sessionTokens {
+            entries.append(.text("Today: \(UsageFormatter.tokenCountString(sessionTokens)) tokens", .secondary))
+        }
+        if let totalTokens = combined.last30DaysTokens {
+            entries.append(.text("30 Days: \(UsageFormatter.tokenCountString(totalTokens)) tokens", .secondary))
+        }
+
+        guard entries.count > 1 else { return nil }
+        return Section(entries: entries)
     }
 
     private static func actionsSection(

@@ -362,6 +362,56 @@ final class UsageStore {
         return nil
     }
 
+    // MARK: - Combined Token Snapshot
+
+    var combinedTokenSnapshot: CostUsageTokenSnapshot? {
+        let costProviders: [UsageProvider] = [.claude, .codex, .vertexai, .amp]
+        let providersWithData: [(UsageProvider, CostUsageTokenSnapshot)] = costProviders
+            .compactMap { provider in
+                guard self.isEnabled(provider),
+                      let snapshot = self.tokenSnapshots[provider] else { return nil }
+                return (provider, snapshot)
+            }
+
+        guard providersWithData.count >= 2 else { return nil }
+
+        var sessionTokens: Int = 0
+        var sessionCost: Double = 0
+        var last30DaysTokens: Int = 0
+        var last30DaysCost: Double = 0
+        var hasSessionTokens = false
+        var hasSessionCost = false
+        var has30DayTokens = false
+        var has30DayCost = false
+
+        for (_, snapshot) in providersWithData {
+            if let tokens = snapshot.sessionTokens {
+                sessionTokens += tokens
+                hasSessionTokens = true
+            }
+            if let cost = snapshot.sessionCostUSD {
+                sessionCost += cost
+                hasSessionCost = true
+            }
+            if let tokens = snapshot.last30DaysTokens {
+                last30DaysTokens += tokens
+                has30DayTokens = true
+            }
+            if let cost = snapshot.last30DaysCostUSD {
+                last30DaysCost += cost
+                has30DayCost = true
+            }
+        }
+
+        return CostUsageTokenSnapshot(
+            sessionTokens: hasSessionTokens ? sessionTokens : nil,
+            sessionCostUSD: hasSessionCost ? sessionCost : nil,
+            last30DaysTokens: has30DayTokens ? last30DaysTokens : nil,
+            last30DaysCostUSD: has30DayCost ? last30DaysCost : nil,
+            daily: [],
+            updatedAt: Date())
+    }
+
     var iconStyle: IconStyle {
         let enabled = self.enabledProviders()
         if enabled.count > 1 { return .combined }
