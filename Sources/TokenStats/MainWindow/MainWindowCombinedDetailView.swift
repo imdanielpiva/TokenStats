@@ -306,6 +306,19 @@ struct MainWindowCombinedDetailView: View {
                         .frame(height: 200)
                 }
             }
+
+            // Cumulative tokens (when >1 entry)
+            if report.entries.count > 1 {
+                self.chartSection(
+                    title: "Cumulative Tokens",
+                    subtitle: "Total: \(UsageFormatter.tokenCountString(report.totalTokens))")
+                {
+                    UsageHistoryCumulativeTokenChart(
+                        entries: report.entries,
+                        provider: .claude) // Use claude styling for combined
+                        .frame(height: 200)
+                }
+            }
         }
     }
 
