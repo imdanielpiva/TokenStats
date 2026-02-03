@@ -74,6 +74,7 @@ struct UsageHistoryProjectionCard: View {
             self.monthProgressBar(projection)
         }
         .padding(12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .controlBackgroundColor))
         .cornerRadius(8)
     }

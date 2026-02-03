@@ -231,24 +231,28 @@ struct MainWindowCombinedDetailView: View {
     @ViewBuilder
     private func chartsContent(report: CostUsageAggregatedReport) -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Row 1: Summary + Projected Spend (side by side)
-            HStack(alignment: .top, spacing: 16) {
-                self.summarySection(report: report)
-                if self.historyStore.selectedPeriod == .day && report.totalCostUSD != nil {
-                    UsageHistoryProjectionCard(
-                        entries: report.entries,
-                        provider: .claude) // Use claude styling for combined
+            // Row 1: Summary + Projected Spend (side by side, equal height)
+            Grid(alignment: .topLeading, horizontalSpacing: 16, verticalSpacing: 16) {
+                GridRow {
+                    self.summarySection(report: report)
+                    if self.historyStore.selectedPeriod == .day && report.totalCostUSD != nil {
+                        UsageHistoryProjectionCard(
+                            entries: report.entries,
+                            provider: .claude) // Use claude styling for combined
+                    }
                 }
             }
 
             // Row 2: Streaks + Activity (side by side, daily only with >7 entries)
             if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
-                HStack(alignment: .top, spacing: 16) {
-                    self.streakSection
-                    self.chartSection(title: "Activity") {
-                        UsageHistoryCalendarHeatmap(
-                            entries: report.entries,
-                            provider: .claude) // Use claude styling for combined
+                Grid(alignment: .topLeading, horizontalSpacing: 16, verticalSpacing: 16) {
+                    GridRow {
+                        self.streakSection
+                        self.chartSection(title: "Activity") {
+                            UsageHistoryCalendarHeatmap(
+                                entries: report.entries,
+                                provider: .claude) // Use claude styling for combined
+                        }
                     }
                 }
             }
@@ -349,6 +353,7 @@ struct MainWindowCombinedDetailView: View {
                 }
             }
             .padding(12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color(nsColor: .controlBackgroundColor))
             .cornerRadius(8)
         }
@@ -450,6 +455,7 @@ struct MainWindowCombinedDetailView: View {
             }
         }
         .padding(12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .controlBackgroundColor))
         .cornerRadius(8)
     }
@@ -491,6 +497,7 @@ struct MainWindowCombinedDetailView: View {
             content()
         }
         .padding(12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .controlBackgroundColor))
         .cornerRadius(8)
     }

@@ -42,6 +42,7 @@
 - Usage History: add cumulative spend line chart showing running total over time.
 - Usage History: add cumulative tokens line chart showing running token total over time.
 - Usage History: reorganize chart layout with side-by-side sections (Summary + Projected Spend, Streaks + Activity).
+- Usage History: equal-height cards in side-by-side rows using Grid layout.
 - Usage History: default to daily aggregation when opening the app or switching providers.
 - Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
