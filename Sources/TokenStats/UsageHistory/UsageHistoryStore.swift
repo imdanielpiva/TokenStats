@@ -57,7 +57,7 @@ final class UsageHistoryStore {
     // MARK: - Selection state
 
     var selectedProvider: UsageHistoryProvider = .claude
-    var selectedPeriod: CostUsageTimePeriod = .month
+    var selectedPeriod: CostUsageTimePeriod = .day
     var selectedModels: Set<String> = []
 
     // MARK: - Data state
