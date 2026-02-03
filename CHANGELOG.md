@@ -27,6 +27,7 @@
 ### Desktop App
 - **TokenStats is now a full desktop macOS app** with proper window management and dock presence.
 - New main window with NavigationSplitView: provider sidebar + usage detail area.
+- New "All Providers" combined view showing aggregated usage, tokens, and costs across all enabled providers.
 - All Usage History charts integrated into the main window (budget, streaks, insights, week comparison, calendar heatmap, token charts, input/output breakdown, weekday chart, cost, cumulative spend).
 - Menu bar icon is now optional: toggle "Show Menu Bar Icon" in Settings → General (enabled by default).
 - App now appears in the dock and Cmd+Tab switcher.
@@ -40,6 +41,8 @@
 - Usage History: add projected monthly spend with daily average and month-end extrapolation.
 - Usage History: add per-provider monthly budget setting with color-coded progress bar.
 - Usage History: add cumulative spend line chart showing running total over time.
+- Usage History: add cumulative tokens line chart showing running token total over time.
+- Usage History: default to daily aggregation when opening the app or switching providers.
 - Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
 - Preferences: add cookie source pickers with contextual helper text for the selected mode.
