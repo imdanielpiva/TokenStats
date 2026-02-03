@@ -67,8 +67,10 @@ struct UsageHistoryCumulativeTokenChart: View {
                 AxisMarks(values: .automatic(desiredCount: min(self.entriesWithTokens.count, 10))) { _ in
                     AxisGridLine()
                     AxisTick()
-                    AxisValueLabel()
-                        .font(.caption2)
+                    if self.entriesWithTokens.count <= 30 {
+                        AxisValueLabel()
+                            .font(.caption2)
+                    }
                 }
             }
             .chartYAxis {

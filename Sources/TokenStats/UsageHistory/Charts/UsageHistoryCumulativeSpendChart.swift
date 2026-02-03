@@ -67,8 +67,10 @@ struct UsageHistoryCumulativeSpendChart: View {
                 AxisMarks(values: .automatic(desiredCount: min(self.entriesWithCost.count, 10))) { _ in
                     AxisGridLine()
                     AxisTick()
-                    AxisValueLabel()
-                        .font(.caption2)
+                    if self.entriesWithCost.count <= 30 {
+                        AxisValueLabel()
+                            .font(.caption2)
+                    }
                 }
             }
             .chartYAxis {

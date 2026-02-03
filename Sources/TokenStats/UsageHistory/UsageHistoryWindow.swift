@@ -140,7 +140,7 @@ struct UsageHistoryDetailView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         self.summarySection(report: report)
-                        self.budgetSection(report: report)
+                        self.projectionSection(report: report)
                         self.streakSection
                         self.funStatsSection(report: report)
                         self.weekComparisonSection(report: report)
@@ -447,18 +447,15 @@ struct UsageHistoryDetailView: View {
         }
     }
 
-    // MARK: - Budget & Projections
+    // MARK: - Projection Section
 
     @ViewBuilder
-    private func budgetSection(report: CostUsageAggregatedReport) -> some View {
+    private func projectionSection(report: CostUsageAggregatedReport) -> some View {
         // Only show when we have daily data for projections
         if self.store.selectedPeriod == .day && report.totalCostUSD != nil {
-            UsageHistoryBudgetSection(
+            UsageHistoryProjectionCard(
                 entries: report.entries,
-                provider: self.store.selectedProvider,
-                monthlyBudget: Binding(
-                    get: { self.store.currentProviderBudget },
-                    set: { self.store.currentProviderBudget = $0 }))
+                provider: self.store.selectedProvider)
         }
     }
 

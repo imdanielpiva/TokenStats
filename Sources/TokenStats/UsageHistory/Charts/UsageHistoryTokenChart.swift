@@ -70,8 +70,10 @@ struct UsageHistoryTokenChart: View {
                 AxisMarks(values: .automatic(desiredCount: min(self.entries.count, 10))) { _ in
                     AxisGridLine()
                     AxisTick()
-                    AxisValueLabel()
-                        .font(.caption2)
+                    if self.entries.count <= 30 {
+                        AxisValueLabel()
+                            .font(.caption2)
+                    }
                 }
             }
             .chartYAxis {

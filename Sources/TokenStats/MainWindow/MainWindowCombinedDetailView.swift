@@ -231,36 +231,36 @@ struct MainWindowCombinedDetailView: View {
     @ViewBuilder
     private func chartsContent(report: CostUsageAggregatedReport) -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Summary section
-            self.summarySection(report: report)
+            // Row 1: Summary + Projected Spend (side by side)
+            HStack(alignment: .top, spacing: 16) {
+                self.summarySection(report: report)
+                if self.historyStore.selectedPeriod == .day && report.totalCostUSD != nil {
+                    UsageHistoryProjectionCard(
+                        entries: report.entries,
+                        provider: .claude) // Use claude styling for combined
+                }
+            }
 
-            // Streaks section
-            self.streakSection
+            // Row 2: Streaks + Activity (side by side, daily only with >7 entries)
+            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
+                HStack(alignment: .top, spacing: 16) {
+                    self.streakSection
+                    self.chartSection(title: "Activity") {
+                        UsageHistoryCalendarHeatmap(
+                            entries: report.entries,
+                            provider: .claude) // Use claude styling for combined
+                    }
+                }
+            }
 
-            // Fun stats / Insights
+            // Row 3: Insights
             if !report.entries.isEmpty {
                 self.chartSection(title: "Insights") {
                     UsageHistoryFunStats(entries: report.entries, report: report)
                 }
             }
 
-            // Week comparison (daily period only)
-            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
-                self.chartSection(title: "Week Comparison") {
-                    UsageHistoryWeekComparison(entries: report.entries)
-                }
-            }
-
-            // Calendar heatmap (daily period only)
-            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
-                self.chartSection(title: "Activity") {
-                    UsageHistoryCalendarHeatmap(
-                        entries: report.entries,
-                        provider: .claude) // Use claude styling for combined
-                }
-            }
-
-            // Token chart
+            // Row 4: Token Usage
             self.chartSection(title: "Token Usage") {
                 UsageHistoryTokenChart(
                     entries: report.entries,
@@ -268,20 +268,7 @@ struct MainWindowCombinedDetailView: View {
                     .frame(height: 200)
             }
 
-            // Input vs Output tokens breakdown
-            self.tokenBreakdownSection(report: report)
-
-            // Usage by day of week (daily period only)
-            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
-                self.chartSection(title: "Usage by Day of Week") {
-                    UsageHistoryWeekdayChart(
-                        entries: report.entries,
-                        provider: .claude) // Use claude styling for combined
-                        .frame(height: 180)
-                }
-            }
-
-            // Cost chart (if available)
+            // Row 5: Cost (USD)
             if report.totalCostUSD != nil {
                 self.chartSection(
                     title: "Cost (USD)",
@@ -294,7 +281,10 @@ struct MainWindowCombinedDetailView: View {
                 }
             }
 
-            // Cumulative spend (when cost data available)
+            // Row 6: Input vs Output Tokens
+            self.tokenBreakdownSection(report: report)
+
+            // Row 7: Cumulative Spend
             if report.totalCostUSD != nil && report.entries.count > 1 {
                 self.chartSection(
                     title: "Cumulative Spend",
@@ -307,7 +297,7 @@ struct MainWindowCombinedDetailView: View {
                 }
             }
 
-            // Cumulative tokens (when >1 entry)
+            // Row 8: Cumulative Tokens
             if report.entries.count > 1 {
                 self.chartSection(
                     title: "Cumulative Tokens",
@@ -317,6 +307,23 @@ struct MainWindowCombinedDetailView: View {
                         entries: report.entries,
                         provider: .claude) // Use claude styling for combined
                         .frame(height: 200)
+                }
+            }
+
+            // Row 9: Week Comparison (daily period only)
+            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
+                self.chartSection(title: "Week Comparison") {
+                    UsageHistoryWeekComparison(entries: report.entries)
+                }
+            }
+
+            // Row 10: Usage by Day of Week (daily period only)
+            if self.historyStore.selectedPeriod == .day && report.entries.count > 7 {
+                self.chartSection(title: "Usage by Day of Week") {
+                    UsageHistoryWeekdayChart(
+                        entries: report.entries,
+                        provider: .claude) // Use claude styling for combined
+                        .frame(height: 180)
                 }
             }
         }

@@ -38,10 +38,10 @@
 - Usage History: add week-over-week comparison cards with change percentages.
 - Usage History: add fun stats/insights section (biggest spend, peak activity, favorite model, weekend warrior badge, etc.).
 - Usage History: add GitHub-style activity calendar heatmap showing last 3 months of daily usage.
-- Usage History: add projected monthly spend with daily average and month-end extrapolation.
-- Usage History: add per-provider monthly budget setting with color-coded progress bar.
+- Usage History: add projected monthly spend card with daily average and month-end extrapolation.
 - Usage History: add cumulative spend line chart showing running total over time.
 - Usage History: add cumulative tokens line chart showing running token total over time.
+- Usage History: reorganize chart layout with side-by-side sections (Summary + Projected Spend, Streaks + Activity).
 - Usage History: default to daily aggregation when opening the app or switching providers.
 - Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
