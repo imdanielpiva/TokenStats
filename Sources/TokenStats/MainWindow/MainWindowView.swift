@@ -43,10 +43,17 @@ struct MainWindowView: View {
                         await self.usageStore.refresh()
                     }
                 } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
+                    if self.usageStore.isRefreshing {
+                        ProgressView()
+                            .scaleEffect(0.7)
+                            .frame(width: 16, height: 16)
+                    } else {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
                 }
                 .keyboardShortcut("r", modifiers: [.command])
                 .help("Refresh usage data for all providers")
+                .disabled(self.usageStore.isRefreshing)
             }
         }
         .task {

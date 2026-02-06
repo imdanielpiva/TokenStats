@@ -46,6 +46,14 @@ struct MainWindowDetailView: View {
                 self.hasLoadedHistory = true
             }
         }
+        .onChange(of: self.usageStore.isRefreshing) { oldValue, newValue in
+            // When a refresh cycle completes, reload history data to keep charts current.
+            if oldValue && !newValue, let historyProvider = self.historyProvider {
+                Task {
+                    await self.historyStore.loadData(for: historyProvider, forceRefresh: true)
+                }
+            }
+        }
     }
 
     // MARK: - Header

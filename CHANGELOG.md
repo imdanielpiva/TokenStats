@@ -44,6 +44,9 @@
 - Usage History: reorganize chart layout with side-by-side sections (Summary + Projected Spend, Streaks + Activity).
 - Usage History: equal-height cards in side-by-side rows using Grid layout.
 - Usage History: default to daily aggregation when opening the app or switching providers.
+- Desktop App: refresh button now reloads usage history charts (not just the usage card/header).
+- Desktop App: auto-refresh timer now also updates charts in the main window.
+- Desktop App: refresh button shows a spinner and disables during refresh.
 - Preferences: move "Access OpenAI via web" into Providers → Codex.
 - Preferences: add usage source pickers for Codex + Claude with auto fallback.
 - Preferences: add cookie source pickers with contextual helper text for the selected mode.

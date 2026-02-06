@@ -28,6 +28,14 @@ struct MainWindowCombinedDetailView: View {
             await self.historyStore.loadCombinedData()
             self.hasLoadedHistory = true
         }
+        .onChange(of: self.usageStore.isRefreshing) { oldValue, newValue in
+            // When a refresh cycle completes, reload history data to keep charts current.
+            if oldValue && !newValue {
+                Task {
+                    await self.historyStore.loadCombinedData(forceRefresh: true)
+                }
+            }
+        }
     }
 
     // MARK: - Header
